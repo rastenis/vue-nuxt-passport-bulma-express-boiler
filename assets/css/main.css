@@ -5,8 +5,6 @@ body {
   letter-spacing: 0.5px;
   font-family: "Source Sans Pro", Arial, sans-serif;
   height: 100vh;
-  margin: 0;
-  display: flex;
 }
 
 footer {
@@ -27,7 +25,4 @@ a:visited {
   height: auto;
   max-width: 400px;
   max-height: 289px;
-}
-
-.container {
 }

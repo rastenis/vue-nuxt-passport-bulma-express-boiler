@@ -19,10 +19,21 @@ export default {
 }
 </script>
 
+<style scoped>
+</style>
+
+
 <style>
 .mainCont {
   justify-content: center;
   height: 100vh;
+  width: 70vw;
+  display: block;
+  margin: auto;
+}
+
+mainHeader {
+  width: 100vh;
 }
 
 .button,
