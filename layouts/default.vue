@@ -19,9 +19,6 @@ export default {
 }
 </script>
 
-<style scoped>
-</style>
-
 
 <style>
 .mainCont {
@@ -34,6 +31,13 @@ export default {
 
 mainHeader {
   width: 100vh;
+}
+.container {
+  margin: 0;
+  width: 100%;
+  padding: 100px 0;
+  text-align: center;
+  align-self: center;
 }
 
 .button,
