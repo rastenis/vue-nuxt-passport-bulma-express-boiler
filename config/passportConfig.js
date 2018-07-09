@@ -8,6 +8,7 @@ const { OAuth2Strategy: GoogleStrategy } = require("passport-google-oauth");
 const util = require("util");
 const db = require("../src/external/db.js");
 const keysConf = require("./passportKeys.json");
+const User = require("../src/controllers/user.js");
 
 passport.serializeUser((user, done) => {
   console.log(util.inspect(user));

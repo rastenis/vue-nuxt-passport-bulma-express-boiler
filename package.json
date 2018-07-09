@@ -13,6 +13,7 @@
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
   },
   "dependencies": {
+    "async": "^2.6.1",
     "axios": "^0.16.2",
     "bcrypt": "^3.0.0",
     "body-parser": "^1.18.3",
@@ -34,6 +35,7 @@
     "passport-twitter": "^1.0.4",
     "request": "^2.87.0",
     "serve-favicon": "^2.5.0",
+    "shortid": "^2.2.11",
     "source-map-support": "^0.4.15"
   },
   "devDependencies": {
@@ -48,7 +50,9 @@
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "node-sass": "^4.9.2",
+    "sass-loader": "^7.0.3"
   },
   "prettier": {}
 }
