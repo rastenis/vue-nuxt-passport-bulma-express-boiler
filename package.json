@@ -27,6 +27,11 @@
     "nedb": "^1.8.0",
     "nedb-session-store": "^1.1.2",
     "nuxt": "latest",
+    "passport": "^0.4.0",
+    "passport-google-oauth": "^1.0.0",
+    "passport-local": "^1.0.0",
+    "passport-twitter": "^1.0.4",
+    "request": "^2.87.0",
     "serve-favicon": "^2.5.0",
     "source-map-support": "^0.4.15"
   },

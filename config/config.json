@@ -1,0 +1,11 @@
+{
+  "port": 3000,
+  "session_secret": "super-secret-key",
+  "self_hosted": "0",
+  "tls": {
+    "email": "email@example.com",
+    "domains": ["domain1.com", "domain2.com"]
+  },
+  "infinite_sessions": "1",
+  "NODE_ENV": "dev"
+}
