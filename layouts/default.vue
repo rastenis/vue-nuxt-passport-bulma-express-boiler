@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="mainCont">
     <mainHeader/>
-    <nuxt/>
+    <nuxt/> 
     <mainFooter/>
   </div>
 </template>
@@ -20,11 +20,9 @@ export default {
 </script>
 
 <style>
-.container {
-  margin: 0;
-  width: 100%;
-  padding: 100px 0;
-  text-align: center;
+.mainCont {
+  justify-content: center;
+  height: 100vh;
 }
 
 .button,

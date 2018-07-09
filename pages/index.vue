@@ -31,18 +31,23 @@ export default {
 </script>
 
 <style scoped>
-.title
-{
+.title {
   margin: 30px 0;
 }
-.users
-{
+.users {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.user
-{
+
+.container {
+  margin: 0;
+  width: 100vw;
+  padding: 100px 0;
+  text-align: center;
+}
+
+.user {
   margin: 10px 0;
 }
 </style>
