@@ -1,9 +1,6 @@
 module.exports = {
-  /*
-  ** Headers of the page
-  */
   head: {
-    title: 'starter',
+    title: 'boiler',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -14,30 +11,30 @@ module.exports = {
     ]
   },
   /*
-  ** Global CSS
-  */
+   ** Global CSS
+   */
   css: ['~/assets/css/main.css'],
   /*
-  ** Add axios globally
-  */
+   ** Add axios globally
+   */
   build: {
     vendor: ['axios'],
     /*
-    ** Run ESLINT on save
-    */
-    extend (config, ctx) {
+     ** Run ESLINT on save
+     */
+    extend(config, ctx) {
       if (ctx.isDev && ctx.isClient) {
         config.module.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
           exclude: /(node_modules)/
-        })
+        });
       }
     }
   },
-  serverMiddleware: [
-    // API middleware
-    '~/api/index.js'
-  ]
+  // serverMiddleware: [
+  //   // API middleware
+  //   '~/api/index.js'
+  // ]
 }
