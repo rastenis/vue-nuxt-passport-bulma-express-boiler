@@ -13,6 +13,8 @@ const Datastore = require("nedb");
 const bcrypt = require("bcrypt");
 const utils = require("./external/utilities.js");
 
+const apiRoutes = require("./routes/users.js");
+
 /*
 A single database for user data
 */
@@ -28,7 +30,7 @@ const config = require("../config/config.json");
 /*
 Passport configuration.
  */
-//const passportConfig = require("../config/passportConfig.js");
+// const passportConfig = require("../config/passportConfig.js");
 
 /*
 Optional TLS cert generation (self_hosted must be 1 in the config)
@@ -73,10 +75,15 @@ app.use(
       maxAge: config.infinite_sessions === "1" ? null : 24 * 60 * 60 * 1000 // 24 hours or infinite, depending on the config
     },
     store: new NedbStore({
-      filename: "db/persistance"
+      filename: "db/persistence"
     })
   })
 );
+
+/*
+API route import
+*/
+app.use("/api", apiRoutes);
 
 /*
 Login post route
