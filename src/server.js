@@ -30,6 +30,17 @@ const db = {
   })
 };
 
+// making usernames unique
+db.ensureIndex({
+  fieldName: 'username',
+  unique: true,
+  sparse: true
+}, function(err) {
+  if (err) {
+    console.error(err);
+  }
+});
+
 /*
 Importing the config
  */
@@ -97,7 +108,6 @@ app.use("/api", apiRoutes);
 Login post route
 */
 app.post("/login", (req, res) => {
-  console.log("asdasdasda");
   utils.log(`LOGIN | requester: " + ${req.body.username}`, 0);
 
   if (req.session.user) {
@@ -108,10 +118,62 @@ app.post("/login", (req, res) => {
       username: req.body.username.toLowerCase()
     },
     (err, docs) => {
+      if (err) {
+        utils.log(err, 1);
+        return res.status(400).json({
+          error: "Bad credentials"
+        });
+      }
+
+      if (docs === 1) {
+        try {
+          if (bcrypt.compareSync(req.body.password, docs[0].password)) {
+            utils.log(chalk.green("LOGIN | passwords match!"), 0);
+            req.session.user = docs[0];
+            return res.json(docs[0]);
+          }
+          utils.log(chalk.red("LOGIN | passwords don't match!"));
+        } catch (e) {
+          if (e.status) {
+            res.status(e.status).json({
+              error: e.message
+            });
+            utils.log(e, 1);
+          } else {
+            // stay silent
+          }
+        }
+      } else if (docs > 1) {
+        // shouldn't be possible if DB indexing is setup correctly
+        // prevent logins from either of the duplicate accounts until resolved
+        utils.log(chalk.bgWhite.red("CRITICAL! Duplicate account usernames."), 1);
+      }
+
+      // all failed logins default to the same error message
+      return res.status(400).json({
+        error: "Bad credentials"
+      });
+
+    }
+  );
+});
+
+/*
+Register post route
+*/
+app.post("/register", (req, res) => {
+  utils.log(`REGISTER | requester: " + ${req.body.username}`, 0);
+
+  if (req.session.user) {
+    return;
+  }
+
+  db.users.insert({
+      username: req.body.username.toLowerCase(),
+      password:
+    },
+    (err, docs) => {
       try {
-        // checks for duplicate usernames
-        // performSecurityChecks(docs);
-        // user exists, no duplicates. Proceeding to the password check
         if (bcrypt.compareSync(req.body.password, docs[0].password)) {
           utils.log(chalk.green("LOGIN | passwords match!"), 0);
           req.session.user = docs[0];

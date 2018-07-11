@@ -10,6 +10,7 @@
   </div>
   <div class="navbar-end">
     <nuxt-link to="/login" class="navbar-item">Login</nuxt-link>
+    <nuxt-link to="/register" class="navbar-item">Register</nuxt-link>
   </div>
   </nav>
 </template>
