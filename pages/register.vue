@@ -2,11 +2,11 @@
   <section class="container">
     <div class="textCentered">
       <h1 class="title">
-        LOGIN
+        REGISTER
       </h1>
     </div>
     <hr>
-    <form action="/login" method="POST">
+    <form action="/register" method="POST">
       <div class="field">
         <label class="label">Username</label>
         <div class="control">
@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="control">
-        <input type="submit" class="button is-link" value="Login">
+        <input type="submit" class="button is-primary" value="Register">
       </div>
     </form>
   </section>
