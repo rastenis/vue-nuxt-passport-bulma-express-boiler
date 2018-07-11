@@ -20,26 +20,7 @@ export default {
 </script>
 
 
-<style>
-.mainCont {
-  justify-content: center;
-  height: 100vh;
-  width: 70vw;
-  display: block;
-  margin: auto;
-}
-
-mainHeader {
-  width: 100vh;
-}
-.container {
-  margin: 0;
-  width: 100%;
-  padding: 100px 0;
-  text-align: center;
-  align-self: center;
-}
-
+<style scoped>
 .button,
 .button:visited {
   display: inline-block;
@@ -56,6 +37,31 @@ mainHeader {
 .button:focus {
   color: #fff;
   background-color: #000;
+}
+</style>
+
+
+<style>
+.mainCont {
+  justify-content: center;
+  height: 100vh;
+  width: 70vw;
+  display: block;
+  margin: auto;
+}
+
+mainHeader {
+  width: 100vh;
+}
+.container {
+  margin: 0;
+  width: 100%;
+  padding: 100px 0;
+  align-self: center;
+}
+
+.textCentered {
+  text-align: center;
 }
 
 .title {

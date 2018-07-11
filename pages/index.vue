@@ -33,6 +33,7 @@ export default {
 <style scoped>
 .title {
   margin: 30px 0;
+  text-align: center;
 }
 .users {
   list-style: none;
@@ -44,8 +45,8 @@ export default {
   margin: 0;
   width: 100%;
   padding: 100px 0;
-  text-align: center;
   align-self: center;
+  text-align: ;
 }
 
 .user {
