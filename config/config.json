@@ -7,5 +7,7 @@
     "domains": ["domain1.com", "domain2.com"]
   },
   "infinite_sessions": "1",
+  "production_logging": "none",
+  "bcrypt_salt_rounds": 12,
   "NODE_ENV": "dev"
 }

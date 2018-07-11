@@ -121,7 +121,7 @@ app.post("/login", (req, res) => {
       if (err) {
         utils.log(err, 1);
         return res.status(400).json({
-          error: "Bad credentials"
+          error: "Server error. Try again later."
         });
       }
 
@@ -164,13 +164,20 @@ Register post route
 app.post("/register", (req, res) => {
   utils.log(`REGISTER | requester: " + ${req.body.username}`, 0);
 
+  if (err) {
+    utils.log(err, 1);
+    return res.status(400).json({
+      error: "Server error. Try again later."
+    });
+  }
+
   if (req.session.user) {
     return;
   }
 
   db.users.insert({
       username: req.body.username.toLowerCase(),
-      password:
+      password: bcrypt.hashSync(req.body.password, config.bcrypt_salt_rounds)
     },
     (err, docs) => {
       try {
@@ -194,6 +201,7 @@ app.post("/register", (req, res) => {
       }
     }
   );
+
 });
 
 /*

@@ -1,9 +1,6 @@
+const config = require("../../config/config.json");
+
 const utilities = {
-  // password hashing function
-  makeHash: function makeHash(pass) {
-    const hash = bcrypt.hashSync(pass, 12);
-    return hash;
-  },
   // logger
   log: function log(message, type) {
     if (
