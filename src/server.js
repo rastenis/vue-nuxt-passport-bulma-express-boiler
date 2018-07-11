@@ -31,7 +31,7 @@ const db = {
 };
 
 // making usernames unique
-db.ensureIndex({
+db.users.ensureIndex({
   fieldName: 'username',
   unique: true,
   sparse: true
@@ -83,6 +83,9 @@ if (config.self_hosted === "1") {
 
 app.use(favicon(path.join(__dirname, "/../static/favicon.ico")));
 app.use(helmet());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(bodyParser.json());
 app.use(
   session({
@@ -162,14 +165,8 @@ app.post("/login", (req, res) => {
 Register post route
 */
 app.post("/register", (req, res) => {
+  console.log(req.body);
   utils.log(`REGISTER | requester: " + ${req.body.username}`, 0);
-
-  if (err) {
-    utils.log(err, 1);
-    return res.status(400).json({
-      error: "Server error. Try again later."
-    });
-  }
 
   if (req.session.user) {
     return;
@@ -180,28 +177,25 @@ app.post("/register", (req, res) => {
       password: bcrypt.hashSync(req.body.password, config.bcrypt_salt_rounds)
     },
     (err, docs) => {
-      try {
-        if (bcrypt.compareSync(req.body.password, docs[0].password)) {
-          utils.log(chalk.green("LOGIN | passwords match!"), 0);
-          req.session.user = docs[0];
-          return res.json(docs[0]);
-        }
-        utils.log(chalk.red("LOGIN | passwords don't match!"));
-        return res.status(556).json({
-          error: "Bad credentials"
-        });
-      } catch (e) {
-        if (e.status) {
-          res.status(e.status).json({
-            error: e.message
+      if (err) {
+        if (err.errorType === "uniqueViolated") {
+          return res.status(409).json({
+            error: "User with given username already exists!"
           });
         } else {
-          // stay silent
+          utils.log(err, 1);
+          return res.status(500).json({
+            error: "Server error. Try again later."
+          });
         }
+
       }
+
+      return res.status(400).json({
+        error: "Bad credentials"
+      });
     }
   );
-
 });
 
 /*
