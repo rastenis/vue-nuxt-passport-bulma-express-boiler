@@ -13,5 +13,8 @@ dist
 # Backpack build
 build
 
-
 db/
+
+*.env
+
+config.json

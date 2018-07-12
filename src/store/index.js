@@ -1,7 +1,4 @@
-import Vue from "vue"
 import Vuex from "vuex"
-
-Vue.use(Vuex);
 
 // Polyfill for window.fetch()
 require("whatwg-fetch");
@@ -9,7 +6,6 @@ require("whatwg-fetch");
 const store = () => new Vuex.Store({
   state: {
     user: null,
-    activeTab: "1",
   },
   mutations: {
     SET_USER: function SET_USER(state, user) {
