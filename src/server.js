@@ -133,7 +133,7 @@ app.post("/login", (req, res) => {
           if (bcrypt.compareSync(req.body.password, docs[0].password)) {
             utils.log(chalk.green("LOGIN | passwords match!"), 0);
             req.session.user = docs[0];
-            return res.json(docs[0]);
+            return res.status(200).json(docs[0]);
           }
           utils.log(chalk.red("LOGIN | passwords don't match!"));
         } catch (e) {
@@ -188,7 +188,6 @@ app.post("/register", (req, res) => {
             error: "Server error. Try again later."
           });
         }
-
       }
 
       return res.status(400).json({
