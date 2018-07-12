@@ -32,7 +32,7 @@ import axios from '~/plugins/axios'
 export default {
   head () {
     return {
-      title: 'Login'
+      title: 'Register'
     }
   },
   data(){
@@ -42,32 +42,32 @@ export default {
         password:"",
         error:null
       },
+      
     };
   },
   methods:{
     async register() {
-      console.log("heloooooo");
+      console.log("ok");
       try {
         await this.$store.dispatch('register', {
           username: this.form.username,
           password: this.form.password
-        })
-        this.form.username = ''
-        this.form.password = ''
-        this.form.error = null
-        this.$message.success("You have successfully created an account!");
+        });
+        this.form.username = '';
+        this.form.password = '';
+        this.form.error = null;
+        this.msg( 'info', true,"You have successfully created an account!");
         this.$nuxt._router.push('/');
       } catch (err) {
-        this.$message({
-          type: 'error',
-          message: err.msg
-        });
+        this.msg( 'error', true,err.msg);
       }
     },
-    msgOn(msg,state){
-      
+    msg(type,state,msg){
+      // TODO: clean this call up
+      this.$parent.$parent.$children[1].msgOn( 'info',true, msg)
     }
-  }
+  },
+ 
 }
 </script>
 

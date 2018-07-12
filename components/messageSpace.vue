@@ -1,12 +1,21 @@
 <template>
 <div>
-   <article class="message is-info">
+   <article v-if="messages.info.on" class="message is-info">
       <div class="message-header">
         <p>Information</p>
         <button class="delete" @click="msgOn('info',false)" aria-label="delete"></button>
       </div>
       <div class="message-body">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur. Aenean ac <em>eleifend lacus</em>, in mollis lectus. Donec sodales, arcu et sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna, vehicula et sem eget, facilisis sodales sem.
+        {{messages.info.msg}}
+      </div>
+    </article>
+    <article v-if="messages.error.on" class="message is-error">
+      <div class="message-header">
+        <p>Information</p>
+        <button class="delete" @click="msgOn('error',false)" aria-label="delete"></button>
+      </div>
+      <div class="message-body">
+        {{messages.error.msg}}
       </div>
     </article>
 </div>
@@ -19,3 +28,36 @@
   width: 40vw;
 }
 </style>
+
+<script>
+export default {
+  data(){
+    return {
+      messages:{
+        info:{
+          on:false,
+          msg:""
+        },
+        error:{
+          on:false,
+          msg:""
+        }
+      }
+    }
+  },
+  methods:{
+    msgOn(type,state, message){
+      if (type==="info") {
+        this.messages.info.on=state;
+        this.messages.info.msg=message;
+      }else if (type==="error"){
+        this.messages.info.on=state;
+        this.messages.info.msg=message;
+      }else{
+        // wrong message type
+        alert("no such message type!");
+      }
+    }
+  } 
+}
+</script>

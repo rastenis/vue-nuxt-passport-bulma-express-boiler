@@ -165,7 +165,6 @@ app.post("/login", (req, res) => {
 Register post route
 */
 app.post("/register", (req, res) => {
-  console.log(req.body);
   utils.log(`REGISTER | requester: " + ${req.body.username}`, 0);
 
   if (req.session.user) {
@@ -190,8 +189,8 @@ app.post("/register", (req, res) => {
         }
       }
 
-      return res.status(400).json({
-        error: "Bad credentials"
+      return res.status(200).json({
+        error: "You have successfully registered!"
       });
     }
   );
