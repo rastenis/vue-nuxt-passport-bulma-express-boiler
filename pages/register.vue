@@ -10,13 +10,13 @@
       <div class="field">
         <label class="label">Username</label>
         <div class="control">
-          <input class="input" type="text" name="username" placeholder="Username" value="">
+          <input class="input" type="text" name="username" v-model="form.username" placeholder="Username" value="">
         </div>
       </div>
       <div class="field">
         <label class="label">Password</label>
         <div class="control">
-          <input class="input" type="password" placeholder="Password" name="password"  value="">
+          <input class="input" type="password" placeholder="Password" name="password" v-model="form.password" value="">
         </div>
       </div>
       <div class="control">
@@ -34,6 +34,35 @@ export default {
     return {
       title: 'Login'
     }
+  },
+  data(){
+    return {
+      form:{
+        username:"",
+        password:"",
+        error:null
+      }
+    };
+  },
+  methods:{
+    async register() {
+      try {
+        await this.$store.dispatch('register', {
+          username: this.form.username,
+          password: this.form.password
+        })
+        this.form.username = ''
+        this.form.password = ''
+        this.form.error = null
+        this.$message.success("You have successfully created an account!");
+        this.$nuxt._router.push('/');
+      } catch (err) {
+        this.$message({
+          type: 'error',
+          message: err.msg
+        });
+      }
+    },
   }
 }
 </script>
