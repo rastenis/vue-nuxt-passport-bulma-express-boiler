@@ -46,7 +46,7 @@ export default {
   width: 100%;
   padding: 100px 0;
   align-self: center;
-  text-align: ;
+  text-align: center;
 }
 
 .user {

@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="control">
-        <input type="submit" class="button is-primary" value="Register">
+        <input type="button" class="button is-primary" @click="register()" value="Register">
       </div>
     </form>
   </section>
@@ -41,11 +41,12 @@ export default {
         username:"",
         password:"",
         error:null
-      }
+      },
     };
   },
   methods:{
     async register() {
+      console.log("heloooooo");
       try {
         await this.$store.dispatch('register', {
           username: this.form.username,
@@ -63,6 +64,9 @@ export default {
         });
       }
     },
+    msgOn(msg,state){
+      
+    }
   }
 }
 </script>
