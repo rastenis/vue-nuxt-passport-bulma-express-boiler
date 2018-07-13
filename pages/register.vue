@@ -59,6 +59,7 @@ export default {
         this.msg( 'info', true,"You have successfully created an account!");
         this.$nuxt._router.push('/');
       } catch (err) {
+        console.log("err is "+err);
         this.msg( 'error', true,err.msg);
       }
     },

@@ -36,7 +36,8 @@
     "request": "^2.87.0",
     "serve-favicon": "^2.5.0",
     "shortid": "^2.2.11",
-    "source-map-support": "^0.4.15"
+    "source-map-support": "^0.4.15",
+    "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",

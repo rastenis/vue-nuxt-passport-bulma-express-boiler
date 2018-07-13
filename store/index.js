@@ -2,6 +2,7 @@ import Vuex from "vuex"
 
 // Polyfill for window.fetch()
 require("whatwg-fetch");
+const util = require('util');
 
 const store = () => new Vuex.Store({
   state: {
@@ -73,8 +74,11 @@ const store = () => new Vuex.Store({
         })
         .then((res) => {
           if (res.status !== 200) {
-            console.log(res);
-            throw new Error(res.data)
+            console.log(res.msg);
+            console.log(res.error);
+            console.log(res.data);
+
+            throw res.data;
           }
           return res.json()
         })
@@ -85,7 +89,7 @@ const store = () => new Vuex.Store({
     logout({
       commit
     }) {
-      return fetch("/api/logout", {
+      return fetch("/logout", {
           // Send the client cookies to the server
           credentials: "same-origin",
           method: "POST"

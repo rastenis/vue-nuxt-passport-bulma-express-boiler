@@ -153,7 +153,7 @@ app.post("/login", (req, res) => {
       }
 
       // all failed logins default to the same error message
-      return res.status(400).json({
+      return res.json({
         error: "Bad credentials"
       });
 
@@ -178,19 +178,28 @@ app.post("/register", (req, res) => {
     (err, docs) => {
       if (err) {
         if (err.errorType === "uniqueViolated") {
-          return res.status(409).json({
-            error: "User with given username already exists!"
+          return res.json({
+            meta: {
+              error: true,
+              msg: "User with given username already exists!"
+            }
           });
         } else {
           utils.log(err, 1);
-          return res.status(500).json({
-            error: "Server error. Try again later."
+          return res.json({
+            meta: {
+              error: true,
+              msg: "Server error. Try again later."
+            }
           });
         }
       }
 
       return res.status(200).json({
-        error: "You have successfully registered!"
+        meta: {
+          error: false,
+          msg: "You have successfully registered!"
+        }
       });
     }
   );

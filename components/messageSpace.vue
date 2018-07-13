@@ -15,7 +15,9 @@
         <button class="delete" @click="msgOn('error',false)" aria-label="delete"></button>
       </div>
       <div class="message-body">
-        {{messages.error.msg}}
+        <p>
+          {{messages.info.msg}}
+        </p>
       </div>
     </article>
 </div>
@@ -48,11 +50,12 @@ export default {
   methods:{
     msgOn(type,state, message){
       if (type==="info") {
-        this.messages.info.on=state;
+        console.log("setting to "+message);
         this.messages.info.msg=message;
+        this.messages.info.on=state;
       }else if (type==="error"){
-        this.messages.info.on=state;
-        this.messages.info.msg=message;
+        this.messages.error.msg=message;
+        this.messages.error.on=state;
       }else{
         // wrong message type
         alert("no such message type!");
