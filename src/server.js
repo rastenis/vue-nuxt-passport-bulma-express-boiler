@@ -195,7 +195,7 @@ app.post("/register", (req, res) => {
         }
       }
 
-      return res.status(200).json({
+      return res.json({
         meta: {
           error: false,
           msg: "You have successfully registered!"

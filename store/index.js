@@ -1,7 +1,6 @@
 import Vuex from "vuex"
+import axios from "axios"
 
-// Polyfill for window.fetch()
-require("whatwg-fetch");
 const util = require('util');
 
 const store = () => new Vuex.Store({
@@ -60,27 +59,21 @@ const store = () => new Vuex.Store({
       username,
       password
     }) {
-      return fetch("/register", {
-          // Send the client cookies to the server
+      return axios({
+          method: 'post',
+          url: '/register',
           credentials: "same-origin",
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
+          data: {
             username,
             password,
-          })
+          }
         })
         .then((res) => {
-          if (res.status !== 200) {
-            console.log(res.msg);
-            console.log(res.error);
-            console.log(res.data);
-
+          console.log(res);
+          if (res.data.meta.error === true) {
             throw res.data;
           }
-          return res.json()
+          return res.data;
         })
         .then((authUser) => {
           commit("SET_USER", authUser)
