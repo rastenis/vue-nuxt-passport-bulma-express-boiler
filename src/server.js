@@ -100,52 +100,16 @@ app.post("/login", (req, res) => {
     return;
   }
 
-  db.users.find({
-      username: req.body.username.toLowerCase()
-    },
-    (err, docs) => {
-      if (err) {
-        utils.log(err, 1);
-        return res.json({
-          meta: {
-            error: false,
-            msg: "Server error. Try again later."
-          },
-        });
-      }
-
-      if (docs.length === 1) {
-        try {
-          if (bcrypt.compareSync(req.body.password, docs[0].password)) {
-            utils.log(chalk.green("LOGIN | passwords match!"), 0);
-            req.session.user = docs[0];
-            return res.json({
-              meta: {
-                error: false
-              },
-              user: docs[0]
-            });
-          }
-          utils.log(chalk.red("LOGIN | passwords don't match!"));
-        } catch (e) {
-          if (e.status) {
-            res.json({
-              meta: {
-                error: true,
-                msg: e.message
-              }
-            });
-            utils.log(e, 1);
-          } else {
-            // stay silent
-          }
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      return res.json({
+        meta: {
+          error: true,
+          msg: err
         }
-      } else if (docs > 1) {
-        // shouldn't be possible if DB indexing is setup correctly
-        // prevent logins from either of the duplicate accounts until resolved
-        utils.log(chalk.bgWhite.red("CRITICAL! Duplicate account usernames."), 1);
-      }
-
+      });
+    }
+    if (!user) {
       // all failed logins default to the same error message
       return res.json({
         meta: {
@@ -153,9 +117,25 @@ app.post("/login", (req, res) => {
           msg: "Bad credentials"
         }
       });
-
     }
-  );
+    req.logIn(user, (err) => {
+      if (err) {
+        return res.json({
+          meta: {
+            error: true,
+            msg: err
+          }
+        });
+      }
+      console.log("login time " + req.user);
+      return res.json({
+        meta: {
+          error: false,
+        }
+      });
+      res.redirect(req.session.returnTo || '/');
+    });
+  })(req, res);
 });
 
 /*

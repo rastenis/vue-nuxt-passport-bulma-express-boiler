@@ -37,8 +37,8 @@ passport.deserializeUser((id, done) => {
  * Sign in using Email and Password.
  */
 passport.use(
-  new LocalStrategy({
-    usernameField: "email"
+  new LocalStrategy({ // LEFTOFF: change from the email OR change TO the email, to keep the linking intact
+    username: "email"
   }, (email, password, done) => {
     db.users.findOne({
       email: email.toLowerCase()
@@ -193,13 +193,13 @@ passport.use(
     },
     (req, accessToken, refreshToken, profile, done) => {
       if (req.user) {
-        db.users.find({
+        db.users.findOne({
           google: profile.id
-        }, (err, docs) => {
+        }, (err, doc) => {
           if (err) {
             return done(err);
           }
-          if (docs.length > 0) {
+          if (doc) {
             res.json({
               meta: {
                 error: true,
@@ -208,7 +208,7 @@ passport.use(
             });
             done(err);
           } else {
-            db.users.find({
+            db.users.findOne({
               _id: req.user.data._id
             }, (err, user) => {
               if (err) {
@@ -244,13 +244,13 @@ passport.use(
           }
         });
       } else {
-        db.users.find({
+        db.users.findOne({
           google: profile.id
-        }, (err, docs) => {
+        }, (err, doc) => {
           if (err) {
             return done(err);
           }
-          if (docs.length === 1) {
+          if (doc) {
             return done(null, docs[0]);
           }
           db.users.findOne({
@@ -260,7 +260,7 @@ passport.use(
               if (err) {
                 return done(err);
               }
-              if (accountsWithThatEmail.length === 1) {
+              if (accountsWithThatEmail) {
                 req.flash("errors", {
                   msg: "There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings."
                 });
