@@ -185,11 +185,17 @@ app.post("/register", (req, res) => {
     return;
   }
 
+  console.log(req.body);
+  console.log("username: |" + req.body.username.toLowerCase() + "|");
+  console.log("pw: |" + req.body.password + "|");
+
   db.users.insert({
       username: req.body.username.toLowerCase(),
       password: bcrypt.hashSync(req.body.password, config.bcrypt_salt_rounds)
     },
     (err, newDoc) => {
+
+      // error handling
       if (err) {
         if (err.errorType === "uniqueViolated") {
           return res.json({
@@ -209,6 +215,9 @@ app.post("/register", (req, res) => {
         }
       }
 
+      console.log("match:" + bcrypt.compareSync(req.body.password, newDoc.password));
+
+      // success!
       return res.json({
         meta: {
           error: false,
