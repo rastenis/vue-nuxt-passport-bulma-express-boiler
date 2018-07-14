@@ -32,7 +32,7 @@ const db = {
 
 // making usernames unique
 db.users.ensureIndex({
-  fieldName: 'username',
+  fieldName: "username",
   unique: true,
   sparse: true
 }, function(err) {

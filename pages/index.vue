@@ -5,11 +5,11 @@
       USERS
     </h1>
     <h4 v-if="$store.state.user" class="title">
-      you're logged in!
+      you"re logged in!
     </h4>
     <ul class="users">
       <li v-for="(user, index) in users" :key="index" class="user">
-        <nuxt-link :to="{ name: 'id', params: { id: index }}">
+        <nuxt-link :to="{ name: "id", params: { id: index }}">
           {{ user.name }}
         </nuxt-link>
       </li>
@@ -18,16 +18,16 @@
 </template>
 
 <script>
-import axios from '~/plugins/axios'
+import axios from "~/plugins/axios";
 
 export default {
   async asyncData () {
-    let { data } = await axios.get('/api/users')
-    return { users: data }
+    let { data } = await axios.get("/api/users");
+    return { users: data };
   },
   head () {
     return {
-      title: 'Users'
+      title: "Users"
     }
   }
 }
@@ -45,10 +45,6 @@ export default {
 }
 
 .container {
-  margin: 0;
-  width: 100%;
-  padding: 100px 0;
-  align-self: center;
   text-align: center;
 }
 

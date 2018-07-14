@@ -14,23 +14,23 @@
 </template>
 
 <script>
-import axios from '~/plugins/axios'
+import axios from "~/plugins/axios";
 
 export default {
   methods:{
     async logout() {
       try {
-        await this.$store.dispatch('logout', {});
-        this.msg( 'info', true,"You have successfully logged out");
-        this.$nuxt._router.push('/');
+        await this.$store.dispatch("logout", {});
+        this.msg( "info", true,"You have successfully logged out");
+        this.$nuxt._router.push("/");
       } catch (err) {
-        this.msg('error', true,err.meta.msg);
+        this.msg("error", true,err.meta.msg);
       }
     },
     msg(type,state,msg){
       // TODO: clean this call up
-      this.$parent.$parent.$children[1].msgOn( 'info',true, msg)
+      this.$parent.$parent.$children[1].msgOn( "info",true, msg);
     }
   },
-}
+};
 </script>
