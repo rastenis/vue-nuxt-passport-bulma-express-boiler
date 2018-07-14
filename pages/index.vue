@@ -6,7 +6,7 @@
     </h1>
     <ul v-if="$store.state.user" class="users">
       <li v-for="(user, index) in users" :key="index" class="user">
-        <nuxt-link :to="{ name: "id", params: { id: index }}">
+        <nuxt-link :to="userPath(index)">
           {{ user.name }}
         </nuxt-link>
       </li>
@@ -22,14 +22,19 @@
 import axios from "~/plugins/axios";
 
 export default {
-  async asyncData () {
+  async asyncData() {
     let { data } = await axios.get("/api/users");
     return { users: data };
   },
-  head () {
+  head() {
     return {
       title: "Users"
     };
+  },
+  methods: {
+    userPath(index) {
+      return `/${index}`;
+    }
   }
 };
 </script>
@@ -43,7 +48,7 @@ export default {
 .subTitle {
   margin: 30px 0;
   text-align: center;
-  font-size:15px;
+  font-size: 15px;
 }
 .users {
   list-style: none;
