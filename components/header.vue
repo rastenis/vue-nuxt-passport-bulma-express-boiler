@@ -21,7 +21,7 @@ export default {
     async logout() {
       try {
         await this.$store.dispatch("logout", {});
-        this.msg( "info", true,"You have successfully logged out");
+        this.msg( "info", true,"You have successfully logged out!");
         this.$nuxt._router.push("/");
       } catch (err) {
         this.msg("error", true,err.meta.msg);
@@ -29,7 +29,7 @@ export default {
     },
     msg(type,state,msg){
       // TODO: clean this call up
-      this.$parent.$parent.$children[1].msgOn( "info",true, msg);
+      this.$parent.$children[1].msgOn( "info",true, msg);
     }
   },
 };

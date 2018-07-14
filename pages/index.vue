@@ -2,18 +2,19 @@
   <section class="container">
     <img src="~assets/img/logo.png" alt="Nuxt.js Logo" class="logo" />
     <h1 class="title">
-      USERS
+      WELCOME
     </h1>
-    <h4 v-if="$store.state.user" class="title">
-      you"re logged in!
-    </h4>
-    <ul class="users">
+    <ul v-if="$store.state.user" class="users">
       <li v-for="(user, index) in users" :key="index" class="user">
         <nuxt-link :to="{ name: "id", params: { id: index }}">
           {{ user.name }}
         </nuxt-link>
       </li>
     </ul>
+    <h4 v-else class="subTitle">
+      Log in to see users.
+    </h4>
+
   </section>
 </template>
 
@@ -28,15 +29,21 @@ export default {
   head () {
     return {
       title: "Users"
-    }
+    };
   }
-}
+};
 </script>
 
 <style scoped>
 .title {
   margin: 30px 0;
   text-align: center;
+}
+
+.subTitle {
+  margin: 30px 0;
+  text-align: center;
+  font-size:15px;
 }
 .users {
   list-style: none;

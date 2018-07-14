@@ -8,10 +8,9 @@
 </template>
 
 <script>
-import messageSpace from '~/components/messageSpace.vue';
-import mainFooter from '~/components/footer.vue';
-import mainHeader from '~/components/header.vue';
-
+import messageSpace from "~/components/messageSpace.vue";
+import mainFooter from "~/components/footer.vue";
+import mainHeader from "~/components/header.vue";
 
 export default {
   components: {
