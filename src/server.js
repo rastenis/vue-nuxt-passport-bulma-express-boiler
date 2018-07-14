@@ -123,7 +123,7 @@ app.post("/login", (req, res) => {
     (err, docs) => {
       if (err) {
         utils.log(err, 1);
-        return res.status(400).json({
+        return res.json({
           error: "Server error. Try again later."
         });
       }
@@ -133,13 +133,19 @@ app.post("/login", (req, res) => {
           if (bcrypt.compareSync(req.body.password, docs[0].password)) {
             utils.log(chalk.green("LOGIN | passwords match!"), 0);
             req.session.user = docs[0];
-            return res.status(200).json(docs[0]);
+            return res.json({
+              meta: {
+                error: false
+              },
+              user: docs[0]
+            });
           }
           utils.log(chalk.red("LOGIN | passwords don't match!"));
         } catch (e) {
           if (e.status) {
-            res.status(e.status).json({
-              error: e.message
+            res.json({
+              error: true,
+              msg: e.message
             });
             utils.log(e, 1);
           } else {
@@ -175,7 +181,7 @@ app.post("/register", (req, res) => {
       username: req.body.username.toLowerCase(),
       password: bcrypt.hashSync(req.body.password, config.bcrypt_salt_rounds)
     },
-    (err, docs) => {
+    (err, newDoc) => {
       if (err) {
         if (err.errorType === "uniqueViolated") {
           return res.json({
@@ -199,7 +205,8 @@ app.post("/register", (req, res) => {
         meta: {
           error: false,
           msg: "You have successfully registered!"
-        }
+        },
+        user: newDoc
       });
     }
   );

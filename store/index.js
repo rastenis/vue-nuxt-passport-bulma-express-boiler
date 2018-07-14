@@ -28,26 +28,22 @@ const store = () => new Vuex.Store({
       username,
       password
     }) {
-      return fetch("/login", {
+      return axios({
+          method: 'post',
+          url: '/login',
           credentials: "same-origin",
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
+          data: {
             username,
-            password
-          })
+            password,
+          }
         })
         .then((res) => {
-          if (res.status !== 200) {
-            console.log(res);
-            throw new Error(res.data)
+          if (res.data.meta.error === true) {
+            throw res.data;
           }
 
           // if no errors, continue
-          return res.json()
-
+          return res.data.user;
         })
         .then((authUser) => {
           commit("SET_USER", authUser);
@@ -69,11 +65,10 @@ const store = () => new Vuex.Store({
           }
         })
         .then((res) => {
-          console.log(res);
           if (res.data.meta.error === true) {
             throw res.data;
           }
-          return res.data;
+          return res.data.user;
         })
         .then((authUser) => {
           commit("SET_USER", authUser)
@@ -82,10 +77,10 @@ const store = () => new Vuex.Store({
     logout({
       commit
     }) {
-      return fetch("/logout", {
-          // Send the client cookies to the server
-          credentials: "same-origin",
-          method: "POST"
+      return axios({
+          method: 'post',
+          url: '/logout',
+          credentials: "same-origin"
         })
         .then(() => {
           commit("SET_USER", null)

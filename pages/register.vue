@@ -47,7 +47,6 @@ export default {
   },
   methods:{
     async register() {
-      console.log("ok");
       try {
         await this.$store.dispatch('register', {
           username: this.form.username,
