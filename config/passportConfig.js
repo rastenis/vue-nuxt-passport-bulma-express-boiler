@@ -1,9 +1,15 @@
 require("dotenv").config();
 const passport = require("passport");
 const request = require("request");
-const { Strategy: LocalStrategy } = require("passport-local");
-const { Strategy: TwitterStrategy } = require("passport-twitter");
-const { OAuth2Strategy: GoogleStrategy } = require("passport-google-oauth");
+const {
+  Strategy: LocalStrategy
+} = require("passport-local");
+const {
+  Strategy: TwitterStrategy
+} = require("passport-twitter");
+const {
+  OAuth2Strategy: GoogleStrategy
+} = require("passport-google-oauth");
 
 const util = require("util");
 const db = require("../src/external/db.js");
@@ -16,7 +22,9 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  db.users.findOne({ _id: id }, (err, user) => {
+  db.users.findOne({
+    _id: id
+  }, (err, user) => {
     if (err) {
       console.error(err);
     }
@@ -29,13 +37,19 @@ passport.deserializeUser((id, done) => {
  * Sign in using Email and Password.
  */
 passport.use(
-  new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-    db.users.findOne({ email: email.toLowerCase() }, (err, user) => {
+  new LocalStrategy({
+    usernameField: "email"
+  }, (email, password, done) => {
+    db.users.findOne({
+      email: email.toLowerCase()
+    }, (err, user) => {
       if (err) {
         return done(err);
       }
       if (!user) {
-        return done(null, false, { msg: `Email ${email} not found.` });
+        return done(null, false, {
+          msg: `Email ${email} not found.`
+        });
       }
 
       user = new User(user);
@@ -47,7 +61,9 @@ passport.use(
         if (isMatch) {
           return done(null, user);
         }
-        return done(null, false, { msg: "Invalid email or password." });
+        return done(null, false, {
+          msg: "Invalid email or password."
+        });
       });
     });
   })
@@ -71,8 +87,7 @@ passport.use(
 // Sign in with Twitter.
 
 passport.use(
-  new TwitterStrategy(
-    {
+  new TwitterStrategy({
       consumerKey: keysConf.TWITTER_KEY,
       consumerSecret: keysConf.TWITTER_SECRET,
       callbackURL: "/auth/twitter/callback",
@@ -80,18 +95,21 @@ passport.use(
     },
     (req, accessToken, tokenSecret, profile, done) => {
       if (req.user) {
-        db.users.findOne({ twitter: profile.id }, (err, existingUser) => {
+        db.users.findOne({
+          twitter: profile.id
+        }, (err, existingUser) => {
           if (err) {
             return done(err);
           }
           if (existingUser) {
             req.flash("errors", {
-              msg:
-                "There is already a Twitter account that belongs to you. Sign in with that account or delete it, then link it with your current account."
+              msg: "There is already a Twitter account that belongs to you. Sign in with that account or delete it, then link it with your current account."
             });
             done(err);
           } else {
-            db.users.findOne({ _id: req.user.data._id }, (err, user) => {
+            db.users.findOne({
+              _id: req.user.data._id
+            }, (err, user) => {
               if (err) {
                 return done(err);
               }
@@ -123,7 +141,9 @@ passport.use(
           }
         });
       } else {
-        db.users.findOne({ twitter: profile.id }, (err, existingUser) => {
+        db.users.findOne({
+          twitter: profile.id
+        }, (err, existingUser) => {
           if (err) {
             return done(err);
           }
@@ -136,14 +156,20 @@ passport.use(
           // so we can "fake" a twitter email address as follows:
           user.data.email = `${profile.username}@twitter.com`;
           user.data.twitter = profile.id;
-          user.data.tokens.push({ kind: "twitter", accessToken, tokenSecret });
+          user.data.tokens.push({
+            kind: "twitter",
+            accessToken,
+            tokenSecret
+          });
           user.data.profile.name = profile.displayName;
           user.data.profile.location = profile._json.location;
           user.data.profile.picture = profile._json.profile_image_url_https;
           user
             .saveUser()
             .then(r => {
-              req.flash("info", { msg: "Facebook account has been linked." });
+              req.flash("info", {
+                msg: "Facebook account has been linked."
+              });
               done(null, user);
             })
             .catch(err => {
@@ -159,8 +185,7 @@ passport.use(
  * Sign in with Google.
  */
 passport.use(
-  new GoogleStrategy(
-    {
+  new GoogleStrategy({
       clientID: keysConf.GOOGLE_ID,
       clientSecret: keysConf.GOOGLE_SECRET,
       callbackURL: "/auth/google/callback",
@@ -168,24 +193,33 @@ passport.use(
     },
     (req, accessToken, refreshToken, profile, done) => {
       if (req.user) {
-        db.users.findOne({ google: profile.id }, (err, existingUser) => {
+        db.users.find({
+          google: profile.id
+        }, (err, docs) => {
           if (err) {
             return done(err);
           }
-          if (existingUser) {
-            req.flash("errors", {
-              msg:
-                "There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account."
+          if (docs.length > 0) {
+            res.json({
+              meta: {
+                error: true,
+                msg: "There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account."
+              },
             });
             done(err);
           } else {
-            db.users.findOne({ _id: req.user.data._id }, (err, user) => {
+            db.users.find({
+              _id: req.user.data._id
+            }, (err, user) => {
               if (err) {
                 return done(err);
               }
               user = new User(user);
               user.data.google = profile.id;
-              user.data.tokens.push({ kind: "google", accessToken });
+              user.data.tokens.push({
+                kind: "google",
+                accessToken
+              });
               user.data.profile.name =
                 user.data.profile.name || profile.displayName;
               user.data.profile.gender =
@@ -201,37 +235,44 @@ passport.use(
                   done(null, user);
                 })
                 .catch(err => {
-                  req.flash("info", { msg: "Google account has been linked." });
+                  req.flash("info", {
+                    msg: "Google account has been linked."
+                  });
                   done(err, user);
                 });
             });
           }
         });
       } else {
-        db.users.findOne({ google: profile.id }, (err, existingUser) => {
+        db.users.find({
+          google: profile.id
+        }, (err, docs) => {
           if (err) {
             return done(err);
           }
-          if (existingUser) {
-            return done(null, existingUser);
+          if (docs.length === 1) {
+            return done(null, docs[0]);
           }
-          db.users.findOne(
-            { email: profile.emails[0].value },
-            (err, existingEmailUser) => {
+          db.users.findOne({
+              email: profile.emails[0].value
+            },
+            (err, accountsWithThatEmail) => {
               if (err) {
                 return done(err);
               }
-              if (existingEmailUser) {
+              if (accountsWithThatEmail.length === 1) {
                 req.flash("errors", {
-                  msg:
-                    "There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings."
+                  msg: "There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings."
                 });
                 done(err);
               } else {
                 const user = new User();
                 user.data.email = profile.emails[0].value;
                 user.data.google = profile.id;
-                user.data.tokens.push({ kind: "google", accessToken });
+                user.data.tokens.push({
+                  kind: "google",
+                  accessToken
+                });
                 user.data.profile.name = profile.displayName;
                 user.data.profile.gender = profile._json.gender;
                 user.data.profile.picture = profile._json.image.url;
@@ -239,7 +280,7 @@ passport.use(
                   .saveUser()
                   .then(r => {
                     req.flash("info", {
-                      msg: "Facebook account has been linked."
+                      msg: "Google account has been linked."
                     });
                     done(null, user);
                   })

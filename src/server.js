@@ -12,7 +12,6 @@ const NedbStore = require("nedb-session-store")(session);
 const favicon = require("serve-favicon");
 const path = require("path");
 const chalk = require("chalk");
-const Datastore = require("nedb");
 const passport = require("passport");
 const bcrypt = require("bcrypt");
 
@@ -21,25 +20,9 @@ const utils = require("./external/utilities.js");
 const apiRoutes = require("./routes/users.js");
 
 /*
-A single database for user data
+Databases
 */
-const db = {
-  users: new Datastore({
-    filename: "db/users",
-    autoload: true
-  })
-};
-
-// making usernames unique
-db.users.ensureIndex({
-  fieldName: "username",
-  unique: true,
-  sparse: true
-}, function(err) {
-  if (err) {
-    console.error(err);
-  }
-});
+const db = require("./external/db.js");
 
 /*
 Importing the config
@@ -254,6 +237,7 @@ app.get(
     failureRedirect: "/login"
   }),
   (req, res) => {
+    console.log("YUHHHHHHHHHHHHHHHHHH " + req);
     res.redirect(req.session.returnTo || "/");
   }
 );

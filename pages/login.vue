@@ -22,54 +22,57 @@
       <div class="control">
         <input type="button" class="button is-link" @click="login()" value="Register">
       </div>
+      <div class="control">
+        <input type="button" class="button" href="/auth/google" value="Log in with Google">
+      </div>
     </form>
   </section>
 </template>
 
 <script>
-import axios from '~/plugins/axios'
+import axios from "~/plugins/axios";
 
 export default {
-  head () {
+  head() {
     return {
-      title: 'Login'
-    }
-  },
-    data(){
-    return {
-      form:{
-        username:"",
-        password:"",
-        error:null
-      },
+      title: "Login"
     };
   },
-  methods:{
+  data() {
+    return {
+      form: {
+        username: "",
+        password: "",
+        error: null
+      }
+    };
+  },
+  methods: {
     async login() {
       try {
-        await this.$store.dispatch('login', {
+        await this.$store.dispatch("login", {
           username: this.form.username,
           password: this.form.password
         });
-        this.form.username = '';
-        this.form.password = '';
+        this.form.username = "";
+        this.form.password = "";
         this.form.error = null;
-        this.msg( 'info', true,"You have successfully logged in!");
-        this.$nuxt._router.push('/');
+        this.msg("info", true, "You have successfully logged in!");
+        this.$nuxt._router.push("/");
       } catch (err) {
         console.log(err);
-        this.msg('error', true,err.meta.msg);
+        this.msg("error", true, err.meta.msg);
       }
     },
-    msg(type,state,msg){
+    msg(type, state, msg) {
       // TODO: clean this call up
-      this.$parent.$parent.$children[1].msgOn( 'info',true, msg)
+      this.$parent.$parent.$children[1].msgOn("info", true, msg);
     }
   },
- mounted(){
-   console.log(this.$store);
- }
-}
+  mounted() {
+    console.log(this.$store);
+  }
+};
 </script>
 
 <style scoped>
