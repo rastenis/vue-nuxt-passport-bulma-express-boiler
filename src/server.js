@@ -131,7 +131,7 @@ app.post("/login", (req, res) => {
         });
       }
 
-      if (docs === 1) {
+      if (docs.length === 1) {
         try {
           if (bcrypt.compareSync(req.body.password, docs[0].password)) {
             utils.log(chalk.green("LOGIN | passwords match!"), 0);
@@ -227,6 +227,16 @@ app.post("/register", (req, res) => {
       });
     }
   );
+});
+
+app.post("/logout", (req, res) => {
+  req.session.user = null;
+  return res.json({
+    meta: {
+      error: false,
+      msg: "You have successfully logged out!"
+    }
+  });
 });
 
 /*

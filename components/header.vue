@@ -2,15 +2,35 @@
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <nuxt-link to="/" class="navbar-item"><h1>vue-nuxt-passport-bulma-express-boiler</h1></nuxt-link>
-      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
     </div>
-    <div class="navbar-end">
-      <nuxt-link to="/login" class="navbar-item">Login</nuxt-link>
-      <nuxt-link to="/register" class="navbar-item">Register</nuxt-link>
-    </div>
+      <div class="navbar-end" v-if="$store.state.user">
+        <a @click="logout()"  class="navbar-item" style="color:darkRed;">Logout</a>
+      </div>
+      <div class="navbar-end" v-else>
+        <nuxt-link to="/login" class="navbar-item">Login</nuxt-link>
+        <nuxt-link to="/register" class="navbar-item">Register</nuxt-link>
+      </div>
   </nav>
 </template>
+
+<script>
+import axios from '~/plugins/axios'
+
+export default {
+  methods:{
+    async logout() {
+      try {
+        await this.$store.dispatch('logout', {});
+        this.msg( 'info', true,"You have successfully logged out");
+        this.$nuxt._router.push('/');
+      } catch (err) {
+        this.msg('error', true,err.meta.msg);
+      }
+    },
+    msg(type,state,msg){
+      // TODO: clean this call up
+      this.$parent.$parent.$children[1].msgOn( 'info',true, msg)
+    }
+  },
+}
+</script>
