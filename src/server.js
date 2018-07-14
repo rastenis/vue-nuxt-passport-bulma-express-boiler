@@ -124,7 +124,10 @@ app.post("/login", (req, res) => {
       if (err) {
         utils.log(err, 1);
         return res.json({
-          error: "Server error. Try again later."
+          meta: {
+            error: false,
+            msg: "Server error. Try again later."
+          },
         });
       }
 
@@ -144,8 +147,10 @@ app.post("/login", (req, res) => {
         } catch (e) {
           if (e.status) {
             res.json({
-              error: true,
-              msg: e.message
+              meta: {
+                error: true,
+                msg: e.message
+              }
             });
             utils.log(e, 1);
           } else {
@@ -160,7 +165,10 @@ app.post("/login", (req, res) => {
 
       // all failed logins default to the same error message
       return res.json({
-        error: "Bad credentials"
+        meta: {
+          error: true,
+          msg: "Bad credentials"
+        }
       });
 
     }

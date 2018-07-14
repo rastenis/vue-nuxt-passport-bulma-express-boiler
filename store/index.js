@@ -38,6 +38,7 @@ const store = () => new Vuex.Store({
           }
         })
         .then((res) => {
+          console.log(res);
           if (res.data.meta.error === true) {
             throw res.data;
           }
