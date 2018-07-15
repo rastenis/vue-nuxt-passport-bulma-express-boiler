@@ -17,7 +17,10 @@ const keysConf = require("./passportKeys.json");
 const User = require("../src/controllers/user.js");
 
 passport.serializeUser((user, done) => {
+  console.log("user:");
   console.log(util.inspect(user));
+  console.log("user end:");
+
   done(null, user.data._id);
 });
 
@@ -38,11 +41,15 @@ passport.deserializeUser((id, done) => {
  */
 passport.use(
   new LocalStrategy({ // LEFTOFF: change from the email OR change TO the email, to keep the linking intact
-    username: "email"
+    usernameField: "email"
   }, (email, password, done) => {
+    console.log("looking for " + email);
+    console.log("looking for " + email.toLowerCase());
+
     db.users.findOne({
       email: email.toLowerCase()
     }, (err, user) => {
+      console.log(user);
       if (err) {
         return done(err);
       }

@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="control">
-        <input type="button" class="button is-link" @click="login()" value="Register">
+        <input type="button" class="button is-link" @click="login()" value="Log in">
       </div>
       <div class="control">
         <input type="button" class="button" href="/auth/google" value="Log in with Google">

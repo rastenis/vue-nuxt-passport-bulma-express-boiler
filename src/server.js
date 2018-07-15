@@ -89,7 +89,15 @@ app.use(
     })
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
+
+//TESTING
+app.use((req, res, next) => {
+  console.log("user is " + req.user, "session is " + req.session);
+  next();
+});
 /*
 API route import
 */
@@ -157,7 +165,7 @@ app.post("/register", (req, res, next) => {
   console.log("pw: |" + req.body.password + "|");
 
   db.users.insert({
-      username: req.body.username.toLowerCase(),
+      email: req.body.email.toLowerCase(),
       password: bcrypt.hashSync(req.body.password, config.bcrypt_salt_rounds)
     },
     (err, newDoc) => {
@@ -183,7 +191,7 @@ app.post("/register", (req, res, next) => {
       }
 
       console.log("match:" + bcrypt.compareSync(req.body.password, newDoc.password));
-
+      newDoc = new User(newDoc);
       req.logIn(newDoc, (err) => {
         if (err) {
           console.error(err);
