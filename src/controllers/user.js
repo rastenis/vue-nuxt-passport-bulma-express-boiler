@@ -17,11 +17,15 @@ class User {
         _id: shortid.generate()
       };
 
-      this._meta = { new: true };
+      this._meta = {
+        new: true
+      };
     } else {
       this.data = data;
       this._data = data;
-      this._meta = { new: false };
+      this._meta = {
+        new: false
+      };
     }
   }
 
@@ -40,7 +44,9 @@ class User {
       return new Promise((resolve, reject) => {
         this.hashPassword(this.data.password)
           .then(hashed => {
-            db.users.update({ _id: this.data._id }, err => {
+            db.users.update({
+              _id: this.data._id
+            }, err => {
               if (err) {
                 return reject(err);
               }
@@ -112,7 +118,9 @@ class User {
           .then(r => {
             this.data.password = hash;
             this._data = this.data;
-            db.users.update({ _id: this.data._id }, this.data, {}, err => {
+            db.users.update({
+              _id: this.data._id
+            }, this.data, {}, err => {
               if (err) {
                 console.error(err);
                 return reject(err);
@@ -123,7 +131,9 @@ class User {
           .catch(e => reject(e));
       } else {
         this._data = this.data;
-        db.users.update({ _id: this.data._id }, this.data, {}, err => {
+        db.users.update({
+          _id: this.data._id
+        }, this.data, {}, err => {
           if (err) {
             console.error(err);
             return reject(err);
@@ -135,6 +145,10 @@ class User {
   }
 
   comparePassword(candidatePassword, cb) {
+    console.log("comparing");
+    console.log("COMPARING " + candidatePassword);
+    console.log("and " + this.data.password);
+
     bcrypt.compare(candidatePassword, this.data.password, (err, isMatch) => {
       cb(err, isMatch);
     });

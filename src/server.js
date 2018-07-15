@@ -12,34 +12,18 @@ const NedbStore = require("nedb-session-store")(session);
 const favicon = require("serve-favicon");
 const path = require("path");
 const chalk = require("chalk");
-const Datastore = require("nedb");
 const passport = require("passport");
 const bcrypt = require("bcrypt");
+const util = require("util");
 
 const utils = require("./external/utilities.js");
 
 const apiRoutes = require("./routes/users.js");
 
 /*
-A single database for user data
+Databases
 */
-const db = {
-  users: new Datastore({
-    filename: "db/users",
-    autoload: true
-  })
-};
-
-// making usernames unique
-db.users.ensureIndex({
-  fieldName: "username",
-  unique: true,
-  sparse: true
-}, function(err) {
-  if (err) {
-    console.error(err);
-  }
-});
+const db = require("./external/db.js");
 
 /*
 Importing the config
@@ -50,6 +34,11 @@ const config = require("../config/config.json");
 Passport configuration.
  */
 const passportConfig = require("../config/passportConfig.js");
+
+/*
+The user model
+ */
+const User = require("../src/controllers/user.js");
 
 /*
 Optional TLS cert generation (self_hosted must be 1 in the config)
@@ -101,6 +90,8 @@ app.use(
     })
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 /*
 API route import
@@ -111,58 +102,22 @@ app.use("/api", apiRoutes);
 Login post route
 */
 app.post("/login", (req, res) => {
-  utils.log(`LOGIN | requester: " + ${req.body.username}`, 0);
+  utils.log(`LOGIN | requester: " + ${req.body.email}`, 0);
 
-  if (req.session.user) {
+  if (typeof req.user !== 'undefined') {
     return;
   }
 
-  db.users.find({
-      username: req.body.username.toLowerCase()
-    },
-    (err, docs) => {
-      if (err) {
-        utils.log(err, 1);
-        return res.json({
-          meta: {
-            error: false,
-            msg: "Server error. Try again later."
-          },
-        });
-      }
-
-      if (docs.length === 1) {
-        try {
-          if (bcrypt.compareSync(req.body.password, docs[0].password)) {
-            utils.log(chalk.green("LOGIN | passwords match!"), 0);
-            req.session.user = docs[0];
-            return res.json({
-              meta: {
-                error: false
-              },
-              user: docs[0]
-            });
-          }
-          utils.log(chalk.red("LOGIN | passwords don't match!"));
-        } catch (e) {
-          if (e.status) {
-            res.json({
-              meta: {
-                error: true,
-                msg: e.message
-              }
-            });
-            utils.log(e, 1);
-          } else {
-            // stay silent
-          }
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      return res.json({
+        meta: {
+          error: true,
+          msg: err
         }
-      } else if (docs > 1) {
-        // shouldn't be possible if DB indexing is setup correctly
-        // prevent logins from either of the duplicate accounts until resolved
-        utils.log(chalk.bgWhite.red("CRITICAL! Duplicate account usernames."), 1);
-      }
-
+      });
+    }
+    if (!user) {
       // all failed logins default to the same error message
       return res.json({
         meta: {
@@ -170,27 +125,38 @@ app.post("/login", (req, res) => {
           msg: "Bad credentials"
         }
       });
-
     }
-  );
+    req.logIn(user, (err) => {
+      if (err) {
+        return res.json({
+          meta: {
+            error: true,
+            msg: err
+          }
+        });
+      }
+      return res.json({
+        meta: {
+          error: false,
+        },
+        user: user
+      });
+    });
+  })(req, res);
 });
 
 /*
 Register post route
 */
-app.post("/register", (req, res) => {
-  utils.log(`REGISTER | requester: " + ${req.body.username}`, 0);
+app.post("/register", (req, res, next) => {
+  utils.log(`REGISTER | requester: " + ${req.body.email}`, 0);
 
-  if (req.session.user) {
+  if (typeof req.user !== 'undefined') {
     return;
   }
 
-  console.log(req.body);
-  console.log("username: |" + req.body.username.toLowerCase() + "|");
-  console.log("pw: |" + req.body.password + "|");
-
   db.users.insert({
-      username: req.body.username.toLowerCase(),
+      email: req.body.email.toLowerCase(),
       password: bcrypt.hashSync(req.body.password, config.bcrypt_salt_rounds)
     },
     (err, newDoc) => {
@@ -201,7 +167,7 @@ app.post("/register", (req, res) => {
           return res.json({
             meta: {
               error: true,
-              msg: "User with given username already exists!"
+              msg: "User with given email already exists!"
             }
           });
         } else {
@@ -215,7 +181,13 @@ app.post("/register", (req, res) => {
         }
       }
 
-      console.log("match:" + bcrypt.compareSync(req.body.password, newDoc.password));
+      newDoc = new User(newDoc);
+      req.logIn(newDoc, (err) => {
+        if (err) {
+          console.error(err);
+          return next(err);
+        }
+      });
 
       // success!
       return res.json({
@@ -230,13 +202,25 @@ app.post("/register", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  req.session.user = null;
-  return res.json({
-    meta: {
-      error: false,
-      msg: "You have successfully logged out!"
+
+  if (typeof req.user !== 'undefined') {
+    return;
+  }
+
+  req.logout();
+  req.session.destroy((err) => {
+    if (err) {
+      console.log('Error : Failed to destroy the session during logout.', err);
     }
+    req.user = null;
+    return res.json({
+      meta: {
+        error: false,
+        msg: "You have successfully logged out!"
+      }
+    });
   });
+
 });
 
 /*
@@ -254,6 +238,7 @@ app.get(
     failureRedirect: "/login"
   }),
   (req, res) => {
+    console.log("YUHHHHHHHHHHHHHHHHHH " + req);
     res.redirect(req.session.returnTo || "/");
   }
 );

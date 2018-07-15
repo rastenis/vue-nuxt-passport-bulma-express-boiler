@@ -8,9 +8,9 @@
     <hr>
     <form action="/register" method="POST">
       <div class="field">
-        <label class="label">Username</label>
+        <label class="label">Email</label>
         <div class="control">
-          <input class="input" type="text" name="username" v-model="form.username" placeholder="Username" value="">
+          <input class="input" type="text" name="username" v-model="form.email" placeholder="Email" value="">
         </div>
       </div>
       <div class="field">
@@ -38,7 +38,7 @@ export default {
   data(){
     return {
       form:{
-        username:"",
+        email:"",
         password:"",
         error:null
       },
@@ -49,10 +49,10 @@ export default {
     async register() {
       try {
         await this.$store.dispatch('register', {
-          username: this.form.username,
+          email: this.form.email,
           password: this.form.password
         });
-        this.form.username = '';
+        this.form.email = '';
         this.form.password = '';
         this.form.error = null;
         this.msg( 'info', true,"You have successfully created an account!");

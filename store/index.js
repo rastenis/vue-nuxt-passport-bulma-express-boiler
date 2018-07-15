@@ -18,14 +18,14 @@ const store = () => new Vuex.Store({
     }, {
       req
     }) {
-      if (req.session && req.session.user) {
-        commit("SET_USER", req.session.user)
+      if (req.session && req.user && req.isAuthenicated()) {
+        commit("SET_USER", req.user);
       }
     },
     login({
       commit
     }, {
-      username,
+      email,
       password
     }) {
       return axios({
@@ -33,7 +33,7 @@ const store = () => new Vuex.Store({
           url: '/login',
           credentials: "same-origin",
           data: {
-            username,
+            email,
             password,
           }
         })
@@ -53,7 +53,7 @@ const store = () => new Vuex.Store({
     register({
       commit
     }, {
-      username,
+      email,
       password
     }) {
       return axios({
@@ -61,7 +61,7 @@ const store = () => new Vuex.Store({
           url: '/register',
           credentials: "same-origin",
           data: {
-            username,
+            email,
             password,
           }
         })
