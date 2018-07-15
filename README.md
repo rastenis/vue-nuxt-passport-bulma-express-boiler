@@ -2,11 +2,11 @@
 
 > A vue/nuxtjs/passport/bulma boilerplate for express.
 
-## Build Setup
+## Setup
 
-``` bash
+```bash
 # install dependencies
-$ npm install # Or yarn install
+$ npm install
 
 # serve with hot reload at localhost:3000
 $ npm run dev
@@ -15,4 +15,12 @@ $ npm run dev
 $ npm start
 ```
 
-For detailed explanation on how things work, checkout the [Nuxt.js docs](https://github.com/nuxt/nuxt.js).
+### Information & sources
+
+For detailed explanation on how things work, checkout the [Nuxt.js docs](https://nuxtjs.org/guide).
+Vue.js docs can be found here: [Vue.js docs](https://vuejs.org/v2/guide/index.html)
+
+This project is based on:
+
+1.  The nuxt-community [express-template](https://github.com/nuxt-community/express-template)express template for ease of comparison & demo api routes
+2.  The google/twitter passport.js strategy configurations were borrowed from sahat's [hackathon-starter](https://github.com/sahat/hackathon-starter).
