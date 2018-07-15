@@ -35,6 +35,11 @@ Passport configuration.
 const passportConfig = require("../config/passportConfig.js");
 
 /*
+The user model
+ */
+const User = require("../src/controllers/user.js");
+
+/*
 Optional TLS cert generation (self_hosted must be 1 in the config)
  */
 if (config.self_hosted === "1") {
@@ -94,7 +99,7 @@ app.use("/api", apiRoutes);
 Login post route
 */
 app.post("/login", (req, res) => {
-  utils.log(`LOGIN | requester: " + ${req.body.username}`, 0);
+  utils.log(`LOGIN | requester: " + ${req.body.email}`, 0);
 
   if (req.session.user) {
     return;
@@ -141,15 +146,14 @@ app.post("/login", (req, res) => {
 /*
 Register post route
 */
-app.post("/register", (req, res) => {
-  utils.log(`REGISTER | requester: " + ${req.body.username}`, 0);
+app.post("/register", (req, res, next) => {
+  utils.log(`REGISTER | requester: " + ${req.body.email}`, 0);
 
   if (req.session.user) {
     return;
   }
 
-  console.log(req.body);
-  console.log("username: |" + req.body.username.toLowerCase() + "|");
+  console.log("email: |" + req.body.email.toLowerCase() + "|");
   console.log("pw: |" + req.body.password + "|");
 
   db.users.insert({
@@ -164,7 +168,7 @@ app.post("/register", (req, res) => {
           return res.json({
             meta: {
               error: true,
-              msg: "User with given username already exists!"
+              msg: "User with given email already exists!"
             }
           });
         } else {
@@ -179,6 +183,13 @@ app.post("/register", (req, res) => {
       }
 
       console.log("match:" + bcrypt.compareSync(req.body.password, newDoc.password));
+
+      req.logIn(newDoc, (err) => {
+        if (err) {
+          console.error(err);
+          return next(err);
+        }
+      });
 
       // success!
       return res.json({
