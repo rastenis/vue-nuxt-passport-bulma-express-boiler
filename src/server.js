@@ -14,6 +14,7 @@ const path = require("path");
 const chalk = require("chalk");
 const passport = require("passport");
 const bcrypt = require("bcrypt");
+const util = require("util");
 
 const utils = require("./external/utilities.js");
 
@@ -92,12 +93,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-//TESTING
-app.use((req, res, next) => {
-  console.log("user is " + req.user, "session is " + req.session);
-  next();
-});
 /*
 API route import
 */
@@ -212,7 +207,11 @@ app.post("/register", (req, res, next) => {
 });
 
 app.post("/logout", (req, res) => {
-  req.session.user = null;
+  req.logout();
+  req.session.destroy((err) => {
+    if (err) console.log('Error : Failed to destroy the session during logout.', err);
+    req.user = null;
+  });
   return res.json({
     meta: {
       error: false,
