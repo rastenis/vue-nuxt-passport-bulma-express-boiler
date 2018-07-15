@@ -104,7 +104,7 @@ Login post route
 app.post("/login", (req, res) => {
   utils.log(`LOGIN | requester: " + ${req.body.email}`, 0);
 
-  if (req.session.user) {
+  if (typeof req.user !== 'undefined') {
     return;
   }
 
@@ -135,13 +135,12 @@ app.post("/login", (req, res) => {
           }
         });
       }
-      console.log("login time " + req.user);
       return res.json({
         meta: {
           error: false,
-        }
+        },
+        user: user
       });
-      res.redirect(req.session.returnTo || '/');
     });
   })(req, res);
 });
@@ -152,12 +151,9 @@ Register post route
 app.post("/register", (req, res, next) => {
   utils.log(`REGISTER | requester: " + ${req.body.email}`, 0);
 
-  if (req.session.user) {
+  if (typeof req.user !== 'undefined') {
     return;
   }
-
-  console.log("email: |" + req.body.email.toLowerCase() + "|");
-  console.log("pw: |" + req.body.password + "|");
 
   db.users.insert({
       email: req.body.email.toLowerCase(),
@@ -185,7 +181,6 @@ app.post("/register", (req, res, next) => {
         }
       }
 
-      console.log("match:" + bcrypt.compareSync(req.body.password, newDoc.password));
       newDoc = new User(newDoc);
       req.logIn(newDoc, (err) => {
         if (err) {
@@ -207,17 +202,25 @@ app.post("/register", (req, res, next) => {
 });
 
 app.post("/logout", (req, res) => {
+
+  if (typeof req.user !== 'undefined') {
+    return;
+  }
+
   req.logout();
   req.session.destroy((err) => {
-    if (err) console.log('Error : Failed to destroy the session during logout.', err);
-    req.user = null;
-  });
-  return res.json({
-    meta: {
-      error: false,
-      msg: "You have successfully logged out!"
+    if (err) {
+      console.log('Error : Failed to destroy the session during logout.', err);
     }
+    req.user = null;
+    return res.json({
+      meta: {
+        error: false,
+        msg: "You have successfully logged out!"
+      }
+    });
   });
+
 });
 
 /*

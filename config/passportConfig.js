@@ -40,7 +40,7 @@ passport.deserializeUser((id, done) => {
  * Sign in using Email and Password.
  */
 passport.use(
-  new LocalStrategy({ // LEFTOFF: change from the email OR change TO the email, to keep the linking intact
+  new LocalStrategy({
     usernameField: "email"
   }, (email, password, done) => {
     console.log("looking for " + email);
