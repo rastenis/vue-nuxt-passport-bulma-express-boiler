@@ -69,9 +69,6 @@ export default {
       this.$parent.$parent.$children[1].msgOn("info", true, msg);
     }
   },
-  mounted() {
-    console.log(this.$store);
-  }
 };
 </script>
 

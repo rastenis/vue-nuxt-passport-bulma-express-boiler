@@ -50,7 +50,6 @@ export default {
   methods:{
     msgOn(type,state, message){
       if (type==="info") {
-        console.log("setting to "+message);
         this.messages.info.msg=message;
         this.messages.info.on=state;
       }else if (type==="error"){

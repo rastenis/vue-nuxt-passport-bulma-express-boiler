@@ -17,10 +17,6 @@ const keysConf = require("./passportKeys.json");
 const User = require("../src/controllers/user.js");
 
 passport.serializeUser((user, done) => {
-  console.log("user:");
-  console.log(util.inspect(user));
-  console.log("user end:");
-
   done(null, user.data._id);
 });
 
@@ -43,9 +39,6 @@ passport.use(
   new LocalStrategy({
     usernameField: "email"
   }, (email, password, done) => {
-    console.log("looking for " + email);
-    console.log("looking for " + email.toLowerCase());
-
     db.users.findOne({
       email: email.toLowerCase()
     }, (err, user) => {
@@ -60,7 +53,6 @@ passport.use(
       }
 
       user = new User(user);
-
       user.comparePassword(password, (err, isMatch) => {
         if (err) {
           return done(err);
