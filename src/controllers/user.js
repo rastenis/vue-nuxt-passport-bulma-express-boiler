@@ -46,6 +46,8 @@ class User {
           .then(hashed => {
             db.users.update({
               _id: this.data._id
+            }, {
+              password: hashed
             }, err => {
               if (err) {
                 return reject(err);
@@ -62,10 +64,13 @@ class User {
 
   hashPassword(password) {
     return new Promise((resolve, reject) => {
+      if (this._meta.noPassword) {
+        return resolve(null);
+      }
       bcrypt.genSalt(config.rounds, (err, salt) => {
         if (err) return reject(err);
 
-        bcrypt.hash(password, salt, null, (err, hash) => {
+        bcrypt.hash(password, salt, (err, hash) => {
           if (err) return reject(err);
           return resolve(hash);
         });
@@ -84,6 +89,7 @@ class User {
 
   saveUser() {
     const self = this;
+    console.log("sabing user");
     if (this._meta.new) {
       // TODO: check for dupes & stuff
       return new Promise((resolve, reject) => {

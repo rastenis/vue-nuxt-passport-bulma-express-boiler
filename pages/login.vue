@@ -23,7 +23,7 @@
         <input type="button" class="button is-link" @click="login()" value="Log in">
       </div>
       <div class="control">
-        <input type="button" class="button" href="/auth/google" value="Log in with Google">
+        <a type="link" class="button" style="margin-top:2vh;" href="/auth/google">Log in with Google</a>
       </div>
     </form>
   </section>
@@ -68,7 +68,7 @@ export default {
       // TODO: clean this call up
       this.$parent.$parent.$children[1].msgOn("info", true, msg);
     }
-  },
+  }
 };
 </script>
 

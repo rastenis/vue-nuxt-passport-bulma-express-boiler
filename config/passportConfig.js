@@ -93,7 +93,7 @@ passport.use(
       passReqToCallback: true
     },
     (req, accessToken, tokenSecret, profile, done) => {
-      if (req.user) {
+      if (typeof req.user !== 'undefined') {
         db.users.findOne({
           twitter: profile.id
         }, (err, existingUser) => {
@@ -130,9 +130,13 @@ passport.use(
               user
                 .saveUser()
                 .then(r => {
-                  req.flash("info", {
-                    msg: "Twitter account has been linked."
+                  req.logIn(r.data, (err) => {
+                    if (err) {
+                      console.error(err);
+                      return next(err);
+                    }
                   });
+                  // TODO: alert user
                   done(err, user);
                 })
                 .catch(e => done(err));
@@ -191,7 +195,7 @@ passport.use(
       passReqToCallback: true
     },
     (req, accessToken, refreshToken, profile, done) => {
-      if (req.user) {
+      if (typeof req.user !== 'undefined') {
         db.users.findOne({
           google: profile.id
         }, (err, doc) => {
@@ -228,15 +232,19 @@ passport.use(
               user
                 .saveUser()
                 .then(r => {
-                  req.flash("info", {
-                    msg: "Facebook account has been linked."
+                  req.logIn(r.data, (err) => {
+                    if (err) {
+                      console.error(err);
+                      return next(err);
+                    }
+
+                    // TODO: message
+                    console.log("google linked");
+                    done(null, user);
+
                   });
-                  done(null, user);
                 })
                 .catch(err => {
-                  req.flash("info", {
-                    msg: "Google account has been linked."
-                  });
                   done(err, user);
                 });
             });
@@ -260,12 +268,15 @@ passport.use(
                 return done(err);
               }
               if (accountsWithThatEmail) {
-                req.flash("errors", {
-                  msg: "There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings."
-                });
+
+                console.log("already an acc with that email address");
+                /// TODO: message
                 done(err);
               } else {
+                console.log("making user");
+
                 const user = new User();
+                user._meta.noPassword = true;
                 user.data.email = profile.emails[0].value;
                 user.data.google = profile.id;
                 user.data.tokens.push({
@@ -275,13 +286,21 @@ passport.use(
                 user.data.profile.name = profile.displayName;
                 user.data.profile.gender = profile._json.gender;
                 user.data.profile.picture = profile._json.image.url;
+                console.log("prepping to save");
                 user
                   .saveUser()
                   .then(r => {
-                    req.flash("info", {
-                      msg: "Google account has been linked."
+                    req.logIn(r.data, (err) => {
+                      if (err) {
+                        console.error(err);
+                        return next(err);
+                      }
+
+                      // TODO: message
+                      console.log("google linked");
+                      done(null, user);
+
                     });
-                    done(null, user);
                   })
                   .catch(err => {
                     done(err, user);

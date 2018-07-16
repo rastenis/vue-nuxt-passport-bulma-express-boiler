@@ -22,5 +22,5 @@ Vue.js docs can be found here: [Vue.js docs](https://vuejs.org/v2/guide/index.ht
 
 This project is based on:
 
-1.  The nuxt-community [express-template](https://github.com/nuxt-community/express-template)express template for ease of comparison & demo api routes
+1.  The nuxt-community [express-template](https://github.com/nuxt-community/express-template) for ease of comparison & demo api routes(this project contains the same routes locked behind an auth gate)
 2.  The google/twitter passport.js strategy configurations were borrowed from sahat's [hackathon-starter](https://github.com/sahat/hackathon-starter).
