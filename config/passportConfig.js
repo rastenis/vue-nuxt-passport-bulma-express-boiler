@@ -171,7 +171,7 @@ passport.use(
             .saveUser()
             .then(r => {
               req.flash("info", {
-                msg: "Facebook account has been linked."
+                msg: "Twitter account has been linked."
               });
               done(null, user);
             })

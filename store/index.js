@@ -18,7 +18,7 @@ const store = () => new Vuex.Store({
     }, {
       req
     }) {
-      if (req.session && req.user) {
+      if (req.session && typeof req.user !== 'undefined') {
         commit("SET_USER", req.user);
       }
     },
@@ -38,7 +38,6 @@ const store = () => new Vuex.Store({
           }
         })
         .then((res) => {
-          console.log(res);
           if (res.data.meta.error === true) {
             throw res.data;
           }

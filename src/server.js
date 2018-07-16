@@ -203,7 +203,8 @@ app.post("/register", (req, res, next) => {
 
 app.post("/logout", (req, res) => {
 
-  if (typeof req.user !== 'undefined') {
+  if (typeof req.user === 'undefined') {
+    console.log("there is no user");
     return;
   }
 
