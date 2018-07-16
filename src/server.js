@@ -239,7 +239,6 @@ app.get(
     failureRedirect: "/login"
   }),
   (req, res) => {
-    console.log("YUHHHHHHHHHHHHHHHHHH " + req);
     res.redirect(req.session.returnTo || "/");
   }
 );

@@ -195,7 +195,7 @@ passport.use(
       passReqToCallback: true
     },
     (req, accessToken, refreshToken, profile, done) => {
-      if (typeof req.user !== 'undefined') {
+      if (typeof req.user !== 'undefined') { //linking google with existing account
         db.users.findOne({
           google: profile.id
         }, (err, doc) => {
@@ -258,7 +258,7 @@ passport.use(
             return done(err);
           }
           if (doc) {
-            return done(null, docs[0]);
+            return done(null, new User(doc));
           }
           db.users.findOne({
               email: profile.emails[0].value
