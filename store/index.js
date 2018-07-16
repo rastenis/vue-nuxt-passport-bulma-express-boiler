@@ -18,7 +18,7 @@ const store = () => new Vuex.Store({
     }, {
       req
     }) {
-      if (req.session && req.user && req.isAuthenicated()) {
+      if (req.session && req.user) {
         commit("SET_USER", req.user);
       }
     },

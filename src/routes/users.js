@@ -16,6 +16,7 @@ const users = [{
 /* GET users listing. */
 router.get('/users', function handleUserFetch(req, res, next) {
   res.json(users);
+  return;
 })
 
 /* GET user by ID. */
