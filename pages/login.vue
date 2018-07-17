@@ -24,11 +24,11 @@
       </div>
       <div class="control">
         <div class="button" type="link" style="margin-top:2vh;">
-          <ion-icon size="small" name="logo-google"></ion-icon>
+          <img class="ic" src="/i/google.svg">
           <a href="/auth/google" class="icon-adjusted">Log in with Google</a>
         </div>
          <div class="button" type="link" style="margin-top:1vh;">
-          <ion-icon size="small" name="logo-twitter"></ion-icon>
+          <img class="ic" src="/i/twitter.svg">
           <a href="/auth/twitter" class="icon-adjusted">Log in with Twitter</a>
         </div>
       </div>
@@ -43,9 +43,6 @@ export default {
   head() {
     return {
       title: "Login",
-      // the dinamically loading icons must be imported separately on each page that requires them.
-      // global loading is not possible unless all icons are loaded
-      script: [{ src: "https://unpkg.com/ionicons@4.2.4/dist/ionicons.js" }]
     };
   },
   data() {
@@ -90,5 +87,10 @@ form {
 
 .icon-adjusted {
   padding-left: 6px;
+}
+
+.ic{
+  width:22px;
+  height:22px;
 }
 </style>
