@@ -32,7 +32,7 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-/**
+/*
  * Sign in using Email and Password.
  */
 passport.use(
@@ -68,23 +68,24 @@ passport.use(
   })
 );
 
-/**
- * OAuth Strategy Overview
+/*
+ * OAuth Strategy:
  *
- * - User is already logged in.
+ * IF User is already logged in:
  *   - Check if there is an existing account with a provider id.
- *     - If there is, return an error message. (Account merging not supported)
+ *     - If there is, return an error message. (Can't link already linked accounts)
  *     - Else link new OAuth account with currently logged-in user.
- * - User is not logged in.
- *   - Check if it"s a returning user.
+ * IF User is not logged in:
+ *   - Check if it's a returning user.
  *     - If returning user, sign in and we are done.
  *     - Else check if there is an existing account with user"s email.
  *       - If there is, return an error message.
  *       - Else create a new account.
  */
 
-// Sign in with Twitter.
-
+/* 
+ * Sign in with Twitter.
+ */
 passport.use(
   new TwitterStrategy({
       consumerKey: keysConf.TWITTER_KEY,
@@ -101,49 +102,51 @@ passport.use(
             return done(err);
           }
           if (existingUser) {
-            req.flash("errors", {
-              msg: "There is already a Twitter account that belongs to you. Sign in with that account or delete it, then link it with your current account."
-            });
-            done(err);
-          } else {
-            db.users.findOne({
-              _id: req.user.data._id
-            }, (err, user) => {
-              if (err) {
-                return done(err);
-              }
-              user = new User(user);
-              user.data.twitter = profile.id;
-              user.data.tokens.push({
-                kind: "twitter",
-                accessToken,
-                tokenSecret
-              });
-              user.data.profile.name =
-                user.data.profile.name || profile.displayName;
-              user.data.profile.location =
-                user.data.profile.location || profile._json.location;
-              user.data.profile.picture =
-                user.data.profile.picture ||
-                profile._json.profile_image_url_https;
-
-              user
-                .saveUser()
-                .then(r => {
-                  req.logIn(r.data, (err) => {
-                    if (err) {
-                      console.error(err);
-                      return next(err);
-                    }
-                  });
-                  // TODO: alert user
-                  done(err, user);
-                })
-                .catch(e => done(err));
-            });
+            //TODO: message
+            //This twitter account is already linked.
+            return done(err);
           }
+
+          // linking twitter with existing logged in account
+          db.users.findOne({
+            _id: req.user.data._id
+          }, (err, user) => {
+            if (err) {
+              return done(err);
+            }
+            user = new User(user);
+            user.data.twitter = profile.id;
+            user.data.tokens.push({
+              kind: "twitter",
+              accessToken,
+              tokenSecret
+            });
+            user.data.profile.name =
+              user.data.profile.name || profile.displayName;
+            user.data.profile.location =
+              user.data.profile.location || profile._json.location;
+            user.data.profile.picture =
+              user.data.profile.picture ||
+              profile._json.profile_image_url_https;
+
+            user
+              .saveUser()
+              .then(r => {
+                req.logIn(r.data, (err) => {
+                  if (err) {
+                    console.error(err);
+                    return next(err);
+                  }
+                });
+                // TODO: alert user about successful link
+                done(err, user);
+              })
+              .catch(e => done(err));
+          });
+
         });
       } else {
+        // creating a brand new account with twitter
         db.users.findOne({
           twitter: profile.id
         }, (err, existingUser) => {
@@ -170,9 +173,8 @@ passport.use(
           user
             .saveUser()
             .then(r => {
-              req.flash("info", {
-                msg: "Twitter account has been linked."
-              });
+              //TODO: message
+              // created an account witch twitter successfully 
               done(null, user);
             })
             .catch(err => {
@@ -184,7 +186,7 @@ passport.use(
   )
 );
 
-/**
+/*
  * Sign in with Google.
  */
 passport.use(
@@ -206,11 +208,12 @@ passport.use(
             res.json({
               meta: {
                 error: true,
-                msg: "There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account."
+                msg: "This google account is already linked."
               },
             });
             done(err);
           } else {
+            // fetching the existing logged in user & linking it with the google account
             db.users.findOne({
               _id: req.user.data._id
             }, (err, user) => {
@@ -239,7 +242,7 @@ passport.use(
                     }
 
                     // TODO: message
-                    console.log("google linked");
+                    console.log("google linked to existing account!");
                     done(null, user);
 
                   });
@@ -258,8 +261,11 @@ passport.use(
             return done(err);
           }
           if (doc) {
+            // log in with existing google account
             return done(null, new User(doc));
           }
+
+          // create a google account
           db.users.findOne({
               email: profile.emails[0].value
             },
@@ -269,11 +275,11 @@ passport.use(
               }
               if (accountsWithThatEmail) {
 
-                console.log("already an acc with that email address");
+                console.log("already an account with that email address");
                 /// TODO: message
                 done(err);
               } else {
-                console.log("making user");
+                console.log("making new account with google");
 
                 const user = new User();
                 user._meta.noPassword = true;
@@ -286,7 +292,6 @@ passport.use(
                 user.data.profile.name = profile.displayName;
                 user.data.profile.gender = profile._json.gender;
                 user.data.profile.picture = profile._json.image.url;
-                console.log("prepping to save");
                 user
                   .saveUser()
                   .then(r => {
@@ -297,7 +302,7 @@ passport.use(
                       }
 
                       // TODO: message
-                      console.log("google linked");
+                      console.log("google account created!");
                       done(null, user);
 
                     });
@@ -314,7 +319,7 @@ passport.use(
   )
 );
 
-/**
+/*
  * Login Required middleware.
  */
 exports.isAuthenticated = (req, res, next) => {
@@ -324,7 +329,7 @@ exports.isAuthenticated = (req, res, next) => {
   res.redirect("/login");
 };
 
-/**
+/*
  * Authorization Required middleware.
  */
 exports.isAuthorized = (req, res, next) => {
