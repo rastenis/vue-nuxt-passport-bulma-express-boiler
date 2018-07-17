@@ -11,9 +11,8 @@ const {
   OAuth2Strategy: GoogleStrategy
 } = require("passport-google-oauth");
 
-const util = require("util");
 const db = require("../src/external/db.js");
-const keysConf = require("./passportKeys.json");
+const keysConf = require("../passportKeys.json");
 const User = require("../src/controllers/user.js");
 
 passport.serializeUser((user, done) => {
@@ -154,13 +153,14 @@ passport.use(
             return done(err);
           }
           if (existingUser) {
-            return done(null, existingUser);
+            return done(null, new User(existingUser));
           }
           const user = new User();
           // Twitter will not provide an email address.  Period.
           // But a person’s twitter username is guaranteed to be unique
           // so we can "fake" a twitter email address as follows:
           user.data.email = `${profile.username}@twitter.com`;
+          user._meta.noPassword = true;
           user.data.twitter = profile.id;
           user.data.tokens.push({
             kind: "twitter",
