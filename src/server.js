@@ -6,7 +6,8 @@ const {
 } = require("nuxt");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const app = require("express")();
+const express = require("express");
+const app = express();
 const helmet = require("helmet");
 const NedbStore = require("nedb-session-store")(session);
 const favicon = require("serve-favicon");
@@ -70,7 +71,10 @@ if (config.self_hosted === "1") {
   });
 }
 
-app.use(favicon(path.join(__dirname, "/../static/favicon.ico")));
+// statics
+app.use('/i', express.static('assets/img'))
+
+app.use(favicon(path.join(__dirname, "/../assets/favicon.ico")));
 app.use(helmet());
 app.use(bodyParser.urlencoded({
   extended: true
