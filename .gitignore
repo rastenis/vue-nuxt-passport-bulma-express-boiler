@@ -17,6 +17,4 @@ db/
 db
 db/*
 
-*.env
-
-config.json
+config/passportKeys.json

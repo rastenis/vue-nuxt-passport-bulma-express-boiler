@@ -27,7 +27,7 @@
           <ion-icon size="small" name="logo-google"></ion-icon>
           <a href="/auth/google" class="icon-adjusted">Log in with Google</a>
         </div>
-         <div class="button" type="link" style="margin-top:2vh;">
+         <div class="button" type="link" style="margin-top:1vh;">
           <ion-icon size="small" name="logo-twitter"></ion-icon>
           <a href="/auth/twitter" class="icon-adjusted">Log in with Twitter</a>
         </div>
