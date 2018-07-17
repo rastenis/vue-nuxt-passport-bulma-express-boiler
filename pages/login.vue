@@ -23,7 +23,14 @@
         <input type="button" class="button is-link" @click="login()" value="Log in">
       </div>
       <div class="control">
-        <a type="link" class="button" style="margin-top:2vh;" href="/auth/google">Log in with Google</a>
+        <div class="button" type="link" style="margin-top:2vh;">
+          <ion-icon size="small" name="logo-google"></ion-icon>
+          <a href="/auth/google" class="icon-adjusted">Log in with Google</a>
+        </div>
+         <div class="button" type="link" style="margin-top:2vh;">
+          <ion-icon size="small" name="logo-twitter"></ion-icon>
+          <a href="/auth/twitter" class="icon-adjusted">Log in with Twitter</a>
+        </div>
       </div>
     </form>
   </section>
@@ -35,7 +42,10 @@ import axios from "~/plugins/axios";
 export default {
   head() {
     return {
-      title: "Login"
+      title: "Login",
+      // the dinamically loading icons must be imported separately on each page that requires them.
+      // global loading is not possible unless all icons are loaded
+      script: [{ src: "https://unpkg.com/ionicons@4.2.4/dist/ionicons.js" }]
     };
   },
   data() {
@@ -76,5 +86,9 @@ export default {
 form {
   width: 15vw;
   margin: auto;
+}
+
+.icon-adjusted {
+  padding-left: 6px;
 }
 </style>
