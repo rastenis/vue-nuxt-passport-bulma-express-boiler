@@ -44,16 +44,20 @@ class User {
       return new Promise((resolve, reject) => {
         this.hashPassword(this.data.password)
           .then(hashed => {
-            db.users.update({
-              _id: this.data._id
-            }, {
-              password: hashed
-            }, err => {
-              if (err) {
-                return reject(err);
+            db.users.update(
+              {
+                _id: this.data._id
+              },
+              {
+                password: hashed
+              },
+              err => {
+                if (err) {
+                  return reject(err);
+                }
+                return resolve(null);
               }
-              return resolve(null);
-            });
+            );
           })
           .catch(e => reject(e));
       });
@@ -88,8 +92,7 @@ class User {
   }
 
   saveUser() {
-    const self = this;
-    console.log("sabing user");
+    console.log("saving user");
     if (this._meta.new) {
       // TODO: check for dupes & stuff
       return new Promise((resolve, reject) => {
@@ -124,28 +127,38 @@ class User {
           .then(r => {
             this.data.password = hash;
             this._data = this.data;
-            db.users.update({
-              _id: this.data._id
-            }, this.data, {}, err => {
-              if (err) {
-                console.error(err);
-                return reject(err);
+            db.users.update(
+              {
+                _id: this.data._id
+              },
+              this.data,
+              {},
+              err => {
+                if (err) {
+                  console.error(err);
+                  return reject(err);
+                }
+                return resolve(this);
               }
-              return resolve(this);
-            });
+            );
           })
           .catch(e => reject(e));
       } else {
         this._data = this.data;
-        db.users.update({
-          _id: this.data._id
-        }, this.data, {}, err => {
-          if (err) {
-            console.error(err);
-            return reject(err);
+        db.users.update(
+          {
+            _id: this.data._id
+          },
+          this.data,
+          {},
+          err => {
+            if (err) {
+              console.error(err);
+              return reject(err);
+            }
+            return resolve(this);
           }
-          return resolve(this);
-        });
+        );
       }
     });
   }
