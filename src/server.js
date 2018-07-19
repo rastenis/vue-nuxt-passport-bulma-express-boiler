@@ -259,7 +259,6 @@ app.get(
 /*
 Nuxt.js configuration
 */
-// TODO: see if it builds correctly
 
 const nuxtConfig = require("../nuxt.config.js");
 

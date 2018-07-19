@@ -107,8 +107,7 @@ passport.use(
               return done(err);
             }
             if (existingUser) {
-              //TODO: message
-              //This twitter account is already linked.
+              req.flash("error", "This twitter account is already linked.");
               return done(err);
             }
 
@@ -145,7 +144,7 @@ passport.use(
                         return next(err);
                       }
                     });
-                    // TODO: alert user about successful link
+                    req.flash("info", "Twitter linked successfully!");
                     done(err, user);
                   })
                   .catch(e => done(err));
@@ -184,8 +183,7 @@ passport.use(
             user
               .saveUser()
               .then(r => {
-                //TODO: message
-                // created an account witch twitter successfully
+                req.flash("info", "Created new account via twitter!");
                 done(null, user);
               })
               .catch(err => {
@@ -258,9 +256,7 @@ passport.use(
                           console.error(err);
                           return done(err);
                         }
-
-                        // TODO: message
-                        console.log("google linked to existing account!");
+                        req.flash("info", "Google linked successfully!");
                         done(null, user);
                       });
                     })

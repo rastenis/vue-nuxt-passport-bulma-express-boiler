@@ -72,8 +72,8 @@ export default {
       }
     },
     msg(type, state, msg) {
-      // TODO: clean this call up
-      this.$parent.$parent.$children[1].msgOn("info", true, msg);
+      //todo cleanup
+      this.$parent.$parent.$children[1].msgOn(type, true, msg);
     }
   }
 };
