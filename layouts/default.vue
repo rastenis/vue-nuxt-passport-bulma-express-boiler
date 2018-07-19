@@ -41,35 +41,3 @@ export default {
   background-color: #000;
 }
 </style>
-
-
-<style>
-.mainCont {
-  justify-content: center;
-  height: 100vh;
-  width: 70vw;
-  display: block;
-  margin: auto;
-}
-
-mainHeader {
-  width: 100vh;
-}
-.container {
-  margin: 0;
-  width: 100%;
-  padding: 100px 0;
-  align-self: center;
-}
-
-.textCentered {
-  text-align: center;
-}
-
-.title {
-  color: #000;
-  font-weight: 300;
-  font-size: 2.5em;
-  margin: 0;
-}
-</style>

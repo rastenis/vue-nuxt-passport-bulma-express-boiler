@@ -3,7 +3,6 @@ body {
   background-color: #fff;
   color: #000;
   letter-spacing: 0.5px;
-  font-family: "Source Sans Pro", Arial, sans-serif;
   height: 100vh;
 }
 
@@ -25,4 +24,34 @@ a:visited {
   height: auto;
   max-width: 400px;
   max-height: 289px;
+}
+
+.mainCont {
+  justify-content: center;
+  height: 100vh;
+  width: 70vw;
+  display: block;
+  margin: auto;
+  font-family: "Montserrat", sans-serif;
+}
+
+mainHeader {
+  width: 100vh;
+}
+.container {
+  margin: 0;
+  width: 100%;
+  padding: 100px 0;
+  align-self: center;
+}
+
+.textCentered {
+  text-align: center;
+}
+
+.title {
+  color: #000;
+  font-weight: 300;
+  font-size: 2.5em;
+  margin: 0;
 }

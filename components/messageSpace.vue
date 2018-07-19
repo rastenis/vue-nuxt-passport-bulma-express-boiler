@@ -61,12 +61,9 @@ export default {
       }
     };
   },
-  created(){
-    console.log(this.$store.state.flash);
+  mounted(){
     if (typeof this.$store.state.flash!=="undefined"&&this.$store.state.flash.length!=0) {
-      console.log("GOT MESSAGES TO SHOW");
-        this.messages[this.$store.state.flash[0].type].on=true;
-        this.messages[this.$store.state.flash[0].type].msg=this.$store.state.flash[0].message;
+        this.msgOn(this.$store.state.flash[0].type,true,this.$store.state.flash[0].message);
         this.$store.commit("CLEAR_MESSAGE");
     }
   },
