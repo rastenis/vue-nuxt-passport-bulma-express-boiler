@@ -3,7 +3,7 @@ process.env.DEBUG = process.env.NODE_ENV === "production" ? "" : "nuxt:*";
 const {
   Nuxt,
   Builder
-} = require("nuxt");
+} = require("nuxt-edge");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const express = require("express");

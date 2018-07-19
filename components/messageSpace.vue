@@ -1,5 +1,5 @@
 <template>
-  <div style="position:absolute;margin:auto;width:60vw;">
+  <div style="position:fixed;margin:auto;width:60vw;">
      <transition name="fade">
    <article v-if="messages.info.on" class="message is-info">
       <div class="message-header">
