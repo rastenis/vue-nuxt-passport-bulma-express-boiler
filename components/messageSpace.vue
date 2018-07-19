@@ -13,14 +13,14 @@
       </article>
       </transition>
       <transition name="fade">
-          <article v-if="messages.error.on" class="message is-error">
+          <article v-if="messages.error.on" class="message is-danger">
         <div class="message-header">
           <p>Information</p>
           <button class="delete" @click="msgOn('error',false)" aria-label="delete"></button>
         </div>
         <div class="message-body">
           <p>
-            {{messages.info.msg}}
+            {{messages.error.msg}}
           </p>
         </div>
       </article>
