@@ -1,9 +1,6 @@
 // deps
 process.env.DEBUG = process.env.NODE_ENV === "production" ? "" : "nuxt:*";
-const {
-  Nuxt,
-  Builder
-} = require("nuxt-edge");
+const { Nuxt, Builder } = require("nuxt-edge");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const express = require("express");
@@ -16,6 +13,7 @@ const chalk = require("chalk");
 const passport = require("passport");
 const bcrypt = require("bcrypt");
 const util = require("util");
+const flash = require("flash");
 
 const utils = require("./external/utilities.js");
 
@@ -72,13 +70,15 @@ if (config.self_hosted === "1") {
 }
 
 // statics
-app.use('/i', express.static('assets/img'))
+app.use("/i", express.static("assets/img"));
 
 app.use(favicon(path.join(__dirname, "/../assets/favicon.ico")));
 app.use(helmet());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+);
 app.use(bodyParser.json());
 app.use(
   session({
@@ -94,6 +94,7 @@ app.use(
     })
   })
 );
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -106,13 +107,13 @@ app.use("/api", apiRoutes);
 Login post route
 */
 app.post("/login", (req, res) => {
-  utils.log(`LOGIN | requester: " + ${req.body.email}`, 0);
+  utils.log(`LOGIN | requester: ' + ${req.body.email}`, 0);
 
-  if (typeof req.user !== 'undefined') {
+  if (typeof req.user !== "undefined") {
     return;
   }
 
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate("local", (err, user, info) => {
     if (err) {
       return res.json({
         meta: {
@@ -130,7 +131,7 @@ app.post("/login", (req, res) => {
         }
       });
     }
-    req.logIn(user, (err) => {
+    req.logIn(user, err => {
       if (err) {
         return res.json({
           meta: {
@@ -141,7 +142,7 @@ app.post("/login", (req, res) => {
       }
       return res.json({
         meta: {
-          error: false,
+          error: false
         },
         user: user
       });
@@ -153,18 +154,18 @@ app.post("/login", (req, res) => {
 Register post route
 */
 app.post("/register", (req, res, next) => {
-  utils.log(`REGISTER | requester: " + ${req.body.email}`, 0);
+  utils.log(`REGISTER | requester: ' + ${req.body.email}`, 0);
 
-  if (typeof req.user !== 'undefined') {
+  if (typeof req.user !== "undefined") {
     return;
   }
 
-  db.users.insert({
+  db.users.insert(
+    {
       email: req.body.email.toLowerCase(),
       password: bcrypt.hashSync(req.body.password, config.bcrypt_salt_rounds)
     },
     (err, newDoc) => {
-
       // error handling
       if (err) {
         if (err.errorType === "uniqueViolated") {
@@ -186,7 +187,7 @@ app.post("/register", (req, res, next) => {
       }
 
       newDoc = new User(newDoc);
-      req.logIn(newDoc, (err) => {
+      req.logIn(newDoc, err => {
         if (err) {
           console.error(err);
           return next(err);
@@ -206,16 +207,15 @@ app.post("/register", (req, res, next) => {
 });
 
 app.post("/logout", (req, res) => {
-
-  if (typeof req.user === 'undefined') {
+  if (typeof req.user === "undefined") {
     console.log("there is no user");
     return;
   }
 
   req.logout();
-  req.session.destroy((err) => {
+  req.session.destroy(err => {
     if (err) {
-      console.log('Error : Failed to destroy the session during logout.', err);
+      console.log("Error : Failed to destroy the session during logout.", err);
     }
     req.user = null;
     return res.json({
@@ -225,7 +225,6 @@ app.post("/logout", (req, res) => {
       }
     });
   });
-
 });
 
 /*

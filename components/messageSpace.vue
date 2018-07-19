@@ -1,32 +1,31 @@
 <template>
-  <div style="position:fixed;margin:auto;width:60vw;">
-     <transition name="fade">
-   <article v-if="messages.info.on" class="message is-info">
-      <div class="message-header">
-        <p>Information</p>
-        <button class="delete" @click="msgOn('info',false)" aria-label="delete"></button>
-      </div>
-      <div class="message-body">
-        {{messages.info.msg}}
-      </div>
-    </article>
-     </transition>
-     <transition name="fade">
-        <article v-if="messages.error.on" class="message is-error">
-      <div class="message-header">
-        <p>Information</p>
-        <button class="delete" @click="msgOn('error',false)" aria-label="delete"></button>
-      </div>
-      <div class="message-body">
-        <p>
+  <!-- having this div fixed/absolute currently breaks @click -->
+  <div>
+    <transition name="fade">
+      <article v-if="messages.info.on" class="message is-info">
+        <div class="message-header">
+          <p>Information</p>
+          <button class="delete" @click="msgOn('info',false)" aria-label="delete"></button>
+        </div>
+        <div class="message-body">
           {{messages.info.msg}}
-        </p>
-      </div>
-    </article>
-  </transition>
-
-
-</div>
+        </div>
+      </article>
+      </transition>
+      <transition name="fade">
+          <article v-if="messages.error.on" class="message is-error">
+        <div class="message-header">
+          <p>Information</p>
+          <button class="delete" @click="msgOn('error',false)" aria-label="delete"></button>
+        </div>
+        <div class="message-body">
+          <p>
+            {{messages.info.msg}}
+          </p>
+        </div>
+      </article>
+    </transition>
+  </div>
 </template>
 
 
@@ -61,6 +60,15 @@ export default {
         }
       }
     };
+  },
+  created(){
+    console.log(this.$store.state.flash);
+    if (typeof this.$store.state.flash!=="undefined"&&this.$store.state.flash.length!=0) {
+      console.log("GOT MESSAGES TO SHOW");
+        this.messages[this.$store.state.flash[0].type].on=true;
+        this.messages[this.$store.state.flash[0].type].msg=this.$store.state.flash[0].message;
+        this.$store.commit("CLEAR_MESSAGE");
+    }
   },
   methods: {
     msgOn(type, state, message) {
