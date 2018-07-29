@@ -51,7 +51,7 @@ export default {
           value:""
         }
       },
-      
+      error:null
     };
   },
   methods:{
@@ -78,7 +78,7 @@ export default {
         this.form.email.error=true;
         this.form.email.errorMsg="Enter a valid email address.";
         return;
-      }else if (this.form.password.value.length<5 || his.form.password.value.length>100) { // arbitrary
+      }else if (this.form.password.value.length<5 || this.form.password.value.length>100) { // arbitrary
         this.form.password.error=true;
         this.form.password.errorMsg="Password must be between 5 and a 100 characters.";
         return;
@@ -87,12 +87,12 @@ export default {
       // attempting to proceed with the registration
       try {
         await this.$store.dispatch('register', {
-          email: this.form.email,
-          password: this.form.password
+          email: this.form.email.value,
+          password: this.form.password.value
         });
-        this.form.email = '';
-        this.form.password = '';
-        this.form.error = null;
+        this.form.email.value = '';
+        this.form.password.value = '';
+        this.error = null;
         this.msg( 'info', true, "You have successfully created an account!");
         this.$nuxt._router.push('/');
       } catch (err) {
