@@ -35,6 +35,6 @@ module.exports = {
    ** Add axios globally
    */
   build: {
-    vendor: ["axios"]
+    vendor: ["axios"],
   }
 };
