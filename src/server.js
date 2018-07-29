@@ -107,7 +107,7 @@ app.use("/api", apiRoutes);
 Login post route
 */
 app.post("/login", (req, res) => {
-  utils.log(`LOGIN | requester: ' + ${req.body.email}`, 0);
+  utils.log(`LOGIN | requester: ${req.body.email}`, 0);
 
   if (typeof req.user !== "undefined") {
     return;
@@ -154,7 +154,7 @@ app.post("/login", (req, res) => {
 Register post route
 */
 app.post("/register", (req, res, next) => {
-  utils.log(`REGISTER | requester: ' + ${req.body.email}`, 0);
+  utils.log(`REGISTER | requester: ${req.body.email}`, 0);
 
   if (typeof req.user !== "undefined") {
     return;
