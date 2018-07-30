@@ -11,6 +11,7 @@ const store = () =>
     },
     mutations: {
       SET_USER: function SET_USER(state, user) {
+        z;
         state.user = user;
       },
       SET_FLASH: function SET_FLASH(state, flash) {
@@ -23,13 +24,19 @@ const store = () =>
     },
     actions: {
       nuxtServerInit({ commit }, { req }) {
-        if (req.session && typeof req.user !== "undefined") {
-          commit("SET_USER", req.user);
-        }
-        if (req.session.flash) {
-          commit("SET_FLASH", req.session.flash);
-          req.session.flash = [];
-        }
+        // if (
+        //   typeof req.session !== "undefined" &&
+        //   typeof req.user !== "undefined"
+        // ) {
+        //   commit("SET_USER", req.user);
+        // }
+        // if (
+        //   typeof req.session !== "undefined" &&
+        //   typeof req.session.flash !== "undefined"
+        // ) {
+        //   commit("SET_FLASH", req.session.flash);
+        //   req.session.flash = [];
+        // }
       },
       login({ commit }, { email, password }) {
         return axios({

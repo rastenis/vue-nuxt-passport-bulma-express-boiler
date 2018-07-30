@@ -13,13 +13,15 @@ test.before(async () => {
 
   nuxt = new Nuxt(nuxtConfig);
   await new Builder(nuxt).build();
-  await nuxt.listen(4000, "localhost");
+  await nuxt.listen(3000, "localhost");
 }, 30000);
 
 // Testing contents of publicly accessible routes
 test("Index route & its contents", async testing => {
   const context = {};
   const { index } = await nuxt.renderRoute("/", context);
+  console.log(context);
+  console.log(index);
   testing.true(index.includes('<h1 class="title">WELCOME</h1>'));
 });
 
