@@ -4,7 +4,7 @@
     <h1 class="title">
       WELCOME
     </h1>
-    <ul v-if="$store.state.user" class="users">
+    <ul v-if="$store.state.user && users!=null" class="users">
       <li v-for="(user, index) in users" :key="index" class="user">
         <nuxt-link :to="userPath(index)">
           {{ user.name }}
@@ -22,24 +22,35 @@
 import axios from "~/plugins/axios";
 
 export default {
-  async asyncData(context) {
-    if (context.req.user) {
-      let { data } = await axios.get("/api/users");
-      return { users: data };
-    }
-
-    return {};
-
-  },
   head() {
     return {
       title: "Users"
+    };
+  },
+  data(){
+    return {
+      users:null
     };
   },
   methods: {
     userPath(index) {
       return `/${index}`;
     }
+  },
+  created(){
+     this.$nextTick(() => {
+      this.$nuxt.$loading.start()
+
+        if (this.$store.state.user) {
+        let {data} = axios.get("/api/users").then( (response)=> {
+          this.$nuxt.$loading.finish();
+          this.users=response.data;
+        });
+        }else{
+          this.$nuxt.$loading.finish();
+        }
+    })
+  
   }
 };
 </script>
