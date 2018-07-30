@@ -161,20 +161,21 @@ app.post("/register", (req, res, next) => {
   }
 
   // mirrored validation checks
-  if (!(/\S+@\S+\.\S+/.test(req.body.email))) {
+  if (!/\S+@\S+\.\S+/.test(req.body.email)) {
     return res.json({
       meta: {
         error: true,
         msg: "Enter a valid email address."
       }
     });
-  }else if (req.body.password.length<5 || req.body.password.length>100) { // arbitrary
+  } else if (req.body.password.length < 5 || req.body.password.length > 100) {
+    // arbitrary
     return res.json({
-        meta: {
-          error: true,
-          msg: "Password must be between 5 and a 100 characters."
-        }
-      });
+      meta: {
+        error: true,
+        msg: "Password must be between 5 and a 100 characters."
+      }
+    });
   }
 
   db.users.insert(

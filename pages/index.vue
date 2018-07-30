@@ -22,9 +22,14 @@
 import axios from "~/plugins/axios";
 
 export default {
-  async asyncData() {
-    let { data } = await axios.get("/api/users");
-    return { users: data };
+  async asyncData(context) {
+    if (context.req.user) {
+      let { data } = await axios.get("/api/users");
+      return { users: data };
+    }
+
+    return {};
+
   },
   head() {
     return {

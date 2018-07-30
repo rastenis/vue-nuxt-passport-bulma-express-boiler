@@ -17,13 +17,19 @@ const users = [
 
 /* GET users listing. */
 router.get("/users", function handleUserFetch(req, res, next) {
+  if (typeof req.user === "undefined") {
+    return res.sendStatus(403);
+  }
   res.json(users);
   return;
 });
 
 /* GET user by ID. */
 router.get("/users/:id", function handleSingleUserFetch(req, res, next) {
-  console.log("STATUS IS " + req.params.id);
+  if (typeof req.user === "undefined") {
+    return res.sendStatus(403);
+  }
+
   const id = parseInt(req.params.id);
   if (id >= 0 && id < users.length) {
     res.json(users[id]);
