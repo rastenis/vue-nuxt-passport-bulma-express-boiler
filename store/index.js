@@ -11,32 +11,33 @@ const store = () =>
     },
     mutations: {
       SET_USER: function SET_USER(state, user) {
-        z;
         state.user = user;
       },
       SET_FLASH: function SET_FLASH(state, flash) {
         state.flash = flash;
       },
       CLEAR_MESSAGE: function CLEAR_MESSAGE(state) {
-        console.log("clearing.......");
         state.flash = state.flash.slice(1);
       }
     },
     actions: {
       nuxtServerInit({ commit }, { req }) {
-        // if (
-        //   typeof req.session !== "undefined" &&
-        //   typeof req.user !== "undefined"
-        // ) {
-        //   commit("SET_USER", req.user);
-        // }
-        // if (
-        //   typeof req.session !== "undefined" &&
-        //   typeof req.session.flash !== "undefined"
-        // ) {
-        //   commit("SET_FLASH", req.session.flash);
-        //   req.session.flash = [];
-        // }
+        if (req) {
+          // req doesn't exist when running tests
+          if (
+            typeof req.session !== "undefined" &&
+            typeof req.user !== "undefined"
+          ) {
+            commit("SET_USER", req.user);
+          }
+          if (
+            typeof req.session !== "undefined" &&
+            typeof req.session.flash !== "undefined"
+          ) {
+            commit("SET_FLASH", req.session.flash);
+            req.session.flash = [];
+          }
+        }
       },
       login({ commit }, { email, password }) {
         return axios({
