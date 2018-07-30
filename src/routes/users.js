@@ -18,7 +18,7 @@ const users = [
 /* GET users listing. */
 router.get("/users", function handleUserFetch(req, res, next) {
   if (typeof req.user === "undefined") {
-    return res.sendStatus(403);
+    return res.status(403).json({ success: false, message: "Auth needed." });
   }
   res.json(users);
   return;
@@ -27,7 +27,7 @@ router.get("/users", function handleUserFetch(req, res, next) {
 /* GET user by ID. */
 router.get("/users/:id", function handleSingleUserFetch(req, res, next) {
   if (typeof req.user === "undefined") {
-    return res.sendStatus(403);
+    return res.status(403).json({ success: false, message: "Auth needed." });
   }
 
   const id = parseInt(req.params.id);

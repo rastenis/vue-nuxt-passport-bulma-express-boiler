@@ -15,7 +15,7 @@ test.before(async () => {
 
   nuxt = new Nuxt(nuxtConfig);
   await new Builder(nuxt).build();
-  await nuxt.listen(3000, "localhost");
+  await nuxt.listen(4000, "localhost");
 }, 30000);
 
 // Testing register route
@@ -44,17 +44,6 @@ test("Non-existent user API fetch", async testing => {
   );
 });
 
-// COMPLETELY FAILING api fetches even with
-// Testing forbidden user API fetch
-// test("User API fetch", async testing => {
-//   const html = await rpn({
-//     uri: "http://localhost:3000/api/users",
-//     json: true
-//   });
-//   console.log(html);
-//   testing.true(html.includes('{"name":"Pooya"}'));
-// });
-
 // Testing user route
 test("Non-existent page fetch", async testing => {
   const { html } = await nuxt.renderRoute(
@@ -64,16 +53,22 @@ test("Non-existent page fetch", async testing => {
   testing.true(html.includes("This page could not be found"));
 });
 
-// Testing index route - stable 404 atm
-// test("Index route & its contents", async testing => {
-//   const html = await rpn("http://localhost:3000/", {});
+// COMPLETELY FAILING api fetches even with
+// Testing forbidden user API fetch
+// test("User API fetch", async testing => {
+//   const html = await rpn({
+//     uri: "http://localhost:4000/api/users/1",
+//     json: true
+//   });
 //   console.log(html);
-//   testing.true(
-//     html.includes(
-//       '<img src="~assets/img/logo.png" alt="Nuxt.js Logo" class="logo"'
-//     )
-//   );
+//   testing.true(true);
 // });
+
+//Testing index route - stable 404 atm
+test("Index route & its contents", async testing => {
+  const html = await rpn("http://localhost:4000/", {});
+  testing.true(html.includes("WELCOME"));
+});
 
 // ending the test
 test.after("Exitting...", t => {

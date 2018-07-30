@@ -39,16 +39,19 @@ export default {
   },
   created(){
      this.$nextTick(() => {
-      this.$nuxt.$loading.start()
+       if (!this.$nuxt.$loading) {
+         return;
+       }
 
-        if (this.$store.state.user) {
-        let {data} = axios.get("/api/users").then( (response)=> {
-          this.$nuxt.$loading.finish();
-          this.users=response.data;
-        });
-        }else{
-          this.$nuxt.$loading.finish();
-        }
+      this.$nuxt.$loading.start()
+      if (this.$store.state.user) {
+      let {data} = axios.get("/api/users").then( (response)=> {
+        this.$nuxt.$loading.finish();
+        this.users=response.data;
+      });
+      }else{
+        this.$nuxt.$loading.finish();
+      }
     })
   
   }
