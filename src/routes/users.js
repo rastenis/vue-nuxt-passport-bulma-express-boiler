@@ -23,6 +23,7 @@ router.get("/users", function handleUserFetch(req, res, next) {
 
 /* GET user by ID. */
 router.get("/users/:id", function handleSingleUserFetch(req, res, next) {
+  console.log("STATUS IS " + req.params.id);
   const id = parseInt(req.params.id);
   if (id >= 0 && id < users.length) {
     res.json(users[id]);

@@ -2,7 +2,7 @@ import { resolve } from "path";
 import { Nuxt, Builder } from "nuxt-edge";
 import { JSDOM } from "jsdom";
 import test from "ava";
-const util = require("util");
+var rpn = require("request-promise-native");
 
 // We keep the nuxt and server instance
 // So we can close them at the end of the test
@@ -37,6 +37,23 @@ test("Non-existent user fetch", async testing => {
   const { html } = await nuxt.renderRoute("/some-kind-of-user", context);
   testing.true(html.includes("User not found"));
 });
+
+// Testing non-user API fetch
+test("Non-existent user API fetch", async testing => {
+  const context = {};
+  const { error } = await nuxt.renderRoute("/api/users/hello", context);
+  testing.true(
+    error.statusCode === 404 && error.message === "This page could not be found"
+  );
+});
+
+// // Testing user API fetch
+// test("User API fetch", async testing => {
+//   const context = {};
+//   const html = await rpn("http://localhost:3000/api/users/1", context);
+//   console.log(html);
+//   testing.true(html.includes('{"name":"Pooya"}'));
+// });
 
 // Testing user route
 test("Non-existent page fetch", async testing => {
