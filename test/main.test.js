@@ -2,6 +2,7 @@ import { resolve } from "path";
 import { Nuxt, Builder } from "nuxt-edge";
 import { JSDOM } from "jsdom";
 import test from "ava";
+const util = require("util");
 
 // We keep the nuxt and server instance
 // So we can close them at the end of the test
@@ -19,10 +20,8 @@ test.before(async () => {
 // Testing contents of publicly accessible routes
 test("Index route & its contents", async testing => {
   const context = {};
-  const { index } = await nuxt.renderRoute("/", context);
-  console.log(context);
-  console.log(index);
-  testing.true(index.includes('<h1 class="title">WELCOME</h1>'));
+  const { html } = await nuxt.renderRoute("/login", context);
+  testing.true(html.includes('<form action="/login" method="POST"'));
 });
 
 // ending the test
