@@ -2,7 +2,7 @@ const config = require("../../config/config.json");
 
 const utilities = {
   // logger
-  log: function log(message, type) {
+  log: function log(message, type = 0) {
     if (
       config.production_logging === "all" ||
       process.env.NODE_ENV !== "production"

@@ -54,15 +54,12 @@ test("Non-existent page fetch", async testing => {
 });
 
 // COMPLETELY FAILING api fetches even with
-// Testing forbidden user API fetch
-// test("User API fetch", async testing => {
-//   const html = await rpn({
-//     uri: "http://localhost:4000/api/users/1",
-//     json: true
-//   });
-//   console.log(html);
-//   testing.true(true);
-// });
+// Testing forbidden user API fetch (forbidden)
+test("User API fetch", async testing => {
+  const html = await nuxt.renderRoute("http://localhost:4000/api/users", {});
+  console.log(html);
+  testing.true(true);
+});
 
 //Testing index route - stable 404 atm
 test("Index route & its contents", async testing => {

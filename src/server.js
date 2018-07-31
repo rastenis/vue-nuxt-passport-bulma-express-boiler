@@ -9,10 +9,8 @@ const helmet = require("helmet");
 const NedbStore = require("nedb-session-store")(session);
 const favicon = require("serve-favicon");
 const path = require("path");
-const chalk = require("chalk");
 const passport = require("passport");
 const bcrypt = require("bcrypt");
-const util = require("util");
 const flash = require("flash");
 
 const utils = require("./external/utilities.js");
@@ -42,9 +40,10 @@ const User = require("../src/controllers/user.js");
 /*
 Optional TLS cert generation (self_hosted must be 1 in the config)
  */
+let lex;
 if (config.self_hosted === "1") {
   // returns an instance of node-greenlock with additional helper methods
-  const lex = require("greenlock-express").create({
+  lex = require("greenlock-express").create({
     server: "production",
     challenges: {
       "http-01": require("le-challenge-fs").create({
@@ -113,7 +112,7 @@ app.post("/login", (req, res) => {
     return;
   }
 
-  passport.authenticate("local", (err, user, info) => {
+  passport.authenticate("local", (err, user) => {
     if (err) {
       return res.json({
         meta: {
@@ -207,7 +206,7 @@ app.post("/register", (req, res, next) => {
       newDoc = new User(newDoc);
       req.logIn(newDoc, err => {
         if (err) {
-          console.error(err);
+          utils.log(err, 1);
           return next(err);
         }
       });
@@ -226,14 +225,17 @@ app.post("/register", (req, res, next) => {
 
 app.post("/logout", (req, res) => {
   if (typeof req.user === "undefined") {
-    console.log("there is no user");
+    utils.log("there is no user");
     return;
   }
 
   req.logout();
   req.session.destroy(err => {
     if (err) {
-      console.log("Error : Failed to destroy the session during logout.", err);
+      utils.log(
+        "Error : Failed to destroy the session during logout." + err,
+        1
+      );
     }
     req.user = null;
     return res.json({
@@ -298,7 +300,7 @@ if (config.self_hosted === "1") {
   require("http")
     .createServer(lex.middleware(require("redirect-https")()))
     .listen(80, function() {
-      console.log("Listening for ACME http-01 challenges on", this.address());
+      utils.log("Listening for ACME http-01 challenges on", this.address());
     });
 
   // https handler
@@ -307,12 +309,12 @@ if (config.self_hosted === "1") {
     lex.middleware(app)
   );
   server.listen(443, function() {
-    console.log(
+    utils.log(
       "Listening for ACME tls-sni-01 challenges and serve app on",
       this.address()
     );
   });
 } else {
   app.listen(config.port);
-  console.log(`Server is listening on http://localhost:${config.port}`);
+  utils.log(`Server is listening on http://localhost:${config.port}`);
 }

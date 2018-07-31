@@ -16,16 +16,16 @@ const users = [
 ];
 
 /* GET users listing. */
-router.get("/users", function handleUserFetch(req, res, next) {
-  if (typeof req.user === "undefined") {
-    return res.status(403).json({ success: false, message: "Auth needed." });
-  }
+router.get("/users", function handleUserFetch(req, res) {
+  // if (typeof req.user === 'undefined') {
+  //   return res.status(403).json({ success: false, message: 'Auth needed.' });
+  // }
   res.json(users);
   return;
 });
 
 /* GET user by ID. */
-router.get("/users/:id", function handleSingleUserFetch(req, res, next) {
+router.get("/users/:id", function handleSingleUserFetch(req, res) {
   if (typeof req.user === "undefined") {
     return res.status(403).json({ success: false, message: "Auth needed." });
   }
@@ -38,7 +38,7 @@ router.get("/users/:id", function handleSingleUserFetch(req, res, next) {
   }
 });
 
-router.get("/test", function test(req, res, next) {
+router.get("/test", function test(req, res) {
   req.flash("info", "message");
   res.redirect("/");
 });

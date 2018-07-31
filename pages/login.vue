@@ -19,6 +19,7 @@
           <input class="input" type="password" v-model="form.password" placeholder="Password"  value="">
         </div>
       </div>
+      
       <div class="control">
         <input type="button" class="button is-link" @click="login()" value="Log in">
       </div>
@@ -51,7 +52,8 @@ export default {
         email: "",
         password: "",
         error: null
-      }
+      },
+      
     };
   },
   methods: {
