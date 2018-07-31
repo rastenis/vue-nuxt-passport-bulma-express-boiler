@@ -56,7 +56,7 @@ test("Non-existent page fetch", async testing => {
 // COMPLETELY FAILING api fetches even with
 // Testing forbidden user API fetch (forbidden)
 test("User API fetch", async testing => {
-  const html = await nuxt.renderRoute("http://localhost:4000/api/users", {});
+  const html = await rpn("http://localhost:4000/api/users/1", {});
   console.log(html);
   testing.true(true);
 });

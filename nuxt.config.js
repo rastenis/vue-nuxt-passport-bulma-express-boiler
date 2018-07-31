@@ -35,6 +35,10 @@ module.exports = {
    ** Add axios globally
    */
   build: {
-    vendor: ["axios"],
-  }
+    vendor: ["axios"]
+  },
+  serverMiddleware: [
+    // API middleware
+    "~/src/server.js"
+  ]
 };
