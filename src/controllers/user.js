@@ -49,7 +49,7 @@ class User {
                 _id: this.data._id
               },
               {
-                password: hashed
+                $set: { password: hashed }
               },
               err => {
                 if (err) {

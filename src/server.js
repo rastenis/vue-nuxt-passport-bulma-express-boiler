@@ -267,6 +267,7 @@ app.patch("/changePassword", (req, res) => {
         });
       }
 
+      user.data.password = req.body.newPassword;
       user = user.password(req.body.newPassword);
 
       return res.json({
