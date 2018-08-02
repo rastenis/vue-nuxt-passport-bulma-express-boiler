@@ -31,7 +31,8 @@ export default {
     msg(type,state,msg){
       // TODO: clean this call up
       this.$parent.$children[1].msgOn( "info",true, msg);
-    }
+    },
+
   },
 };
 </script>

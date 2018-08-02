@@ -7,16 +7,35 @@
     </div>
     <hr>
     <div class="profileSetting">
-      <div class="box" @click="expand('profileChangePassTab')">
+      <div class="box">
         Change password
       </div> 
-      <transition name="expand">
-        <div v-if="expands.profileChangePassTab" class="profileSettingContent" ref="profileChangePassTab">
-          <form>
-            the form
-          </form>
-        </div> 
-      </transition>
+        <form action="/register" method="POST">
+          <div class="field">
+            <label class="label">Current Password</label>
+            <div class="control">
+              <input v-bind:class="getPasswordResetInputStyle('password')" type="password" name="password" v-model="form.password.value" placeholder="Current Password" value="">
+              <p v-if="form.password.error" class="help is-danger">{{form.password.errorMsg}}</p>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">New Password</label>
+            <div class="control">
+              <input v-bind:class="getPasswordResetInputStyle('newPassword')" type="password" placeholder="New Password" name="newPassword" v-model="form.newPassword.value" value="">
+              <p v-if="form.newPassword.error" class="help is-danger">{{form.newPassword.errorMsg}}</p>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Repeat New Password</label>
+            <div class="control">
+              <input v-bind:class="getPasswordResetInputStyle('newPasswordRep')" type="password" placeholder="Repeat New Password" name="newPasswordRep" v-model="form.newPasswordRep.value" value="">
+              <p v-if="form.newPasswordRep.error" class="help is-danger">{{form.newPasswordRep.errorMsg}}</p>
+            </div>
+          </div>
+          <div class="control">
+            <input type="button" class="button is-primary" @click="register()" value="Register">
+          </div>
+        </form>
     </div>
   </section>
 </template>
@@ -32,9 +51,23 @@ export default {
   },
   data() {
     return {
-      expands:{
-        profileChangePassTab:false
-      }
+       form:{
+        password:{
+          error:false,
+          errorMsg:null,
+          value:""
+        },
+        newPassword:{
+          error:false,
+          errorMsg:null,
+          value:""
+        },
+          newPasswordRep:{
+          error:false,
+          errorMsg:null,
+          value:""
+        }
+      },
     };
   },
   created(){
@@ -43,16 +76,17 @@ export default {
     }
   },
   methods: {
-    expand(item){
-      this.expands[item]=!this.expands[item];
-    },
     msg(type, state, msg) {
       //todo cleanup
       this.$parent.$parent.$children[1].msgOn(type, true, msg);
     },
-    itemMouseOver(item){
-      
-    }
+    getPasswordResetInputStyle:function getPasswordResetInputStyle(type){
+      let classes="input ";
+      if (this.form[type].error) {
+        classes+="is-danger";
+      }
+      return classes;
+    },
   }
 };
 </script>
@@ -65,19 +99,5 @@ export default {
   cursor:pointer;
 }
 
-.expand-enter-active, .expand-leave-active {
-  transition: opacity .1s;
-}
-.expand-enter{
-  opacity:100%;
-}
-
-.expand-leave-to{
-  opacity:0%;
-}
-
-.profileSettingContent{
-  background:#dddddd;
-}
 
 </style>
