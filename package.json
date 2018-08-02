@@ -14,7 +14,6 @@
     "test": "ava --serial --verbose"
   },
   "dependencies": {
-    "animejs": "^2.2.0",
     "async": "^2.6.1",
     "ava": "^0.25.0",
     "axios": "^0.18.0",
