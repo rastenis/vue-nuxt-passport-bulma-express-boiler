@@ -55,7 +55,11 @@ class User {
                 if (err) {
                   return reject(err);
                 }
-                return resolve(null);
+                // prepping a modified version of the user,
+                // complete with the changed & hashed new password
+                this.data.password = hashed;
+                this._data.password = hashed;
+                return resolve(this);
               }
             );
           })

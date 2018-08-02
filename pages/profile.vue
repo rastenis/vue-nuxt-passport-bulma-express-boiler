@@ -119,16 +119,17 @@ export default {
         return;
       }
 
-      if (this.form.newPassword!==this.form.newPasswordRep) {
+      if (this.form.newPassword.value!==this.form.newPasswordRep.value) {
         this.form.newPasswordRep.error=true;
         this.form.newPasswordRep.errorMsg="Passwords do not match!";
         return;
       }
 
       try {
-        await this.$store.dispatch('passwordChange', {
+        await this.$store.dispatch('changePassword', {
           password: this.form.password.value,
-          password: this.form.password.value
+          newPassword: this.form.newPassword.value,
+          newPasswordRep: this.form.newPasswordRep.value
         });
         this.clearValues();
         this.msg( 'info', true, "You have successfully changed your password!");

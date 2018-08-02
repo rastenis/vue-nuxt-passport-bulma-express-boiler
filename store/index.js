@@ -100,8 +100,8 @@ const store = () =>
             // so we just SET_USER it
             return res.data.user;
           })
-          .then(authUser => {
-            commit("SET_USER", authUser);
+          .then(modifiedUser => {
+            commit("SET_USER", modifiedUser);
           });
       },
       logout({ commit }) {

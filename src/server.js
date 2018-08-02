@@ -223,9 +223,9 @@ app.post("/register", (req, res, next) => {
   );
 });
 
+// user logout route
 app.post("/logout", (req, res) => {
   if (typeof req.user === "undefined") {
-    utils.log("there is no user");
     return;
   }
 
@@ -245,6 +245,46 @@ app.post("/logout", (req, res) => {
       }
     });
   });
+});
+
+// password change route
+app.patch("/changePassword", (req, res) => {
+  if (typeof req.user === "undefined") {
+    return;
+  }
+
+  let user = new User(req.user.data);
+
+  user
+    .verifyPassword(req.body.password)
+    .then(r => {
+      if (req.body.newPassword !== req.body.newPasswordRep) {
+        return res.json({
+          meta: {
+            error: true,
+            msg: "New passwords do not match!"
+          }
+        });
+      }
+
+      user = user.password(req.body.newPassword);
+
+      return res.json({
+        user: user,
+        meta: {
+          error: false,
+          msg: "You have successfully changed your password!"
+        }
+      });
+    })
+    .catch(e => {
+      return res.json({
+        meta: {
+          error: true,
+          msg: "The current password is wrong!"
+        }
+      });
+    });
 });
 
 /*
