@@ -4,6 +4,7 @@
       <nuxt-link to="/" class="navbar-item"><h1>vue-nuxt-passport-bulma-express-boiler</h1></nuxt-link>
     </div>
       <div class="navbar-end" v-if="$store.state.user">
+        <nuxt-link to="/profile"  class="navbar-item">Profile</nuxt-link>
         <a @click="logout()"  class="navbar-item" style="color:darkRed;">Logout</a>
       </div>
       <div class="navbar-end" v-else>

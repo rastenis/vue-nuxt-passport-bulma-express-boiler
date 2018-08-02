@@ -14,6 +14,7 @@
     "test": "ava --serial --verbose"
   },
   "dependencies": {
+    "animejs": "^2.2.0",
     "async": "^2.6.1",
     "ava": "^0.25.0",
     "axios": "^0.18.0",
@@ -34,6 +35,7 @@
     "le-store-certbot": "^2.1.8",
     "nedb": "^1.8.0",
     "nedb-session-store": "^1.1.2",
+    "nodemailer": "^4.6.7",
     "nuxt-edge": "^2.0.0-25549450.31d25df",
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",

@@ -53,6 +53,12 @@ export default {
       },
       error:null
     };
+  }, 
+  created(){
+    console.log(this.$store.state);
+    if (this.$store.state.user) {
+      this.$router.replace({ path: '/' });
+    }
   },
   methods:{
     getInputStyle:function getInputStyle(type){
