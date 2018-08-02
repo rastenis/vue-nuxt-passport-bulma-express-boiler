@@ -81,6 +81,29 @@ const store = () =>
             commit("SET_USER", authUser);
           });
       },
+      changePassword({ commit }, { password, newPassword, newPasswordRep }) {
+        return axios({
+          method: "patch",
+          url: "/changePassword",
+          credentials: "same-origin",
+          data: {
+            password,
+            newPassword,
+            newPasswordRep
+          }
+        })
+          .then(res => {
+            if (res.data.meta.error === true) {
+              throw res.data;
+            }
+            // server returns user with adjusted data,
+            // so we just SET_USER it
+            return res.data.user;
+          })
+          .then(authUser => {
+            commit("SET_USER", authUser);
+          });
+      },
       logout({ commit }) {
         return axios({
           method: "post",
