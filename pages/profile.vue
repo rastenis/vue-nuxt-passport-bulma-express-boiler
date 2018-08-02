@@ -6,7 +6,7 @@
       </h1>
     </div>
     <hr>
-    <div class="profileSetting">
+    <div v-if="meta.hasPassword" class="profileSetting">
       <div class="box">
         Change password
       </div> 
@@ -68,11 +68,20 @@ export default {
           value:""
         }
       },
+      meta:{
+        hasPassword:false
+      }
     };
   },
   created(){
     if (!this.$store.state.user) {
       return this.$router.replace({ path: 'login' });
+    }
+
+    // checking if account contains password i.e isn't created form a token of some sort
+    // checking for hashed pw
+    if (this.$store.state.user.data.password!==null&&typeof this.$store.state.user.data.password!=='undefined') {
+      this.meta.hasPassword=true;
     }
   },
   methods: {
@@ -87,6 +96,48 @@ export default {
       }
       return classes;
     },
+    resetErrors(){
+      for (const key in this.form) {
+        if (this.form.hasOwnProperty(key) ||typeof this.form[key].error !=="undefined") {
+          this.form[key].error=false;
+        }
+      }
+    },
+    clearValues(){
+      for (const key in this.form) {
+        if (this.form.hasOwnProperty(key) ||typeof this.form[key].error !=="undefined") {
+          this.form[key].value="";
+        }
+      }
+    },
+    async register() {
+      this.resetErrors();
+      
+      if (this.form.newPassword.value.length<5 || this.form.newPassword.value.length>100) { // arbitrary
+        this.form.password.error=true;
+        this.form.password.errorMsg="Password must be between 5 and a 100 characters.";
+        return;
+      }
+
+      if (this.form.newPassword!==this.form.newPasswordRep) {
+        this.form.newPasswordRep.error=true;
+        this.form.newPasswordRep.errorMsg="Passwords do not match!";
+        return;
+      }
+
+      try {
+        await this.$store.dispatch('passwordChange', {
+          password: this.form.password.value,
+          password: this.form.password.value
+        });
+        this.clearValues();
+        this.msg( 'info', true, "You have successfully changed your password!");
+        this.$router.push('/');
+      } catch (err) {
+        this.msg( 'error', true,err.meta.msg);
+      }
+    },
+
   }
 };
 </script>
