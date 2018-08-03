@@ -22,6 +22,16 @@ class User {
       };
     } else {
       this.data = data;
+
+      // prep checks, so no checks are required when pushing/finding
+      if (!Array.isArray(this.data.tokens)) {
+        this.data.tokens = [];
+      }
+
+      if (typeof this.data.profile !== "object") {
+        this.data.profile = {};
+      }
+
       this._data = data;
       this._meta = {
         new: false
