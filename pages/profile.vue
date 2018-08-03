@@ -44,12 +44,24 @@
           <div class="field">
             <label class="label">Google</label>
             <p v-if="$store.state.user.data.google">
-              You have already linked your google account.
+              You have already linked your Google account.
             </p>
             <div v-else>
               <div class="button" type="link" style="margin-top:2vh;">
                 <img class="ic" src="/i/google.svg">
                 <a href="/auth/google" class="icon-adjusted">Link Google account</a>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Twitter</label>
+            <p v-if="$store.state.user.data.twitter">
+              You have already linked your Twitter account.
+            </p>
+            <div v-else>
+              <div class="button" type="link" style="margin-top:1vh;">
+                <img class="ic" src="/i/twitter.svg">
+                <a href="/auth/twitter" class="icon-adjusted">Log in with Twitter</a>
               </div>
             </div>
           </div>
