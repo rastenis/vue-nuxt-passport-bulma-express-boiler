@@ -42,7 +42,6 @@ passport.use(
           email: email.toLowerCase()
         },
         (err, user) => {
-          console.log(user);
           if (err) {
             return done(err);
           }
@@ -314,7 +313,6 @@ passport.use(
                   user
                     .saveUser()
                     .then(r => {
-                      console.log(r.data);
                       req.logIn(r, err => {
                         if (err) {
                           console.error(err);

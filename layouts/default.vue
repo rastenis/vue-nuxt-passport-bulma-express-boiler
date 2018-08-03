@@ -41,3 +41,14 @@ export default {
   background-color: #000;
 }
 </style>
+
+<style>
+.icon-adjusted {
+  padding-left: 6px;
+}
+
+.ic{
+  width:22px;
+  height:22px;
+}
+</style>

@@ -96,7 +96,6 @@ class User {
   }
 
   saveUser() {
-    console.log("saving user");
     if (this._meta.new) {
       // TODO: check for dupes & stuff
       return new Promise((resolve, reject) => {
@@ -168,17 +167,12 @@ class User {
   }
 
   comparePassword(candidatePassword, cb) {
-    console.log("comparing");
-    console.log("COMPARING " + candidatePassword);
-    console.log("and " + this.data.password);
-
     bcrypt.compare(candidatePassword, this.data.password, (err, isMatch) => {
       cb(err, isMatch);
     });
   }
 
   isModified(field) {
-    console.log(`${this.data[field]} vs ${this._data[field]}`);
     return this._data[field] !== this.data[field];
   }
 

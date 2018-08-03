@@ -87,12 +87,5 @@ form {
   margin: auto;
 }
 
-.icon-adjusted {
-  padding-left: 6px;
-}
 
-.ic{
-  width:22px;
-  height:22px;
-}
 </style>

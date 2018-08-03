@@ -10,7 +10,7 @@
       <div class="box">
         Change password
       </div> 
-        <form action="/register" method="POST">
+        <form>
           <div class="field">
             <label class="label">Current Password</label>
             <div class="control">
@@ -33,9 +33,26 @@
             </div>
           </div>
           <div class="control">
-            <input type="button" class="button is-primary" @click="register()" value="Register">
+            <input type="button" class="button is-primary" @click="register()" value="Change password">
           </div>
         </form>
+    </div>
+    <div class="profileSetting">
+      <div class="box">
+        Manage linked accounts
+      </div> 
+          <div class="field">
+            <label class="label">Google</label>
+            <p v-if="$store.state.user.data.google">
+              You have already linked your google account.
+            </p>
+            <div v-else>
+              <div class="button" type="link" style="margin-top:2vh;">
+                <img class="ic" src="/i/google.svg">
+                <a href="/auth/google" class="icon-adjusted">Link Google account</a>
+              </div>
+            </div>
+          </div>
     </div>
   </section>
 </template>
@@ -110,7 +127,7 @@ export default {
         }
       }
     },
-    async register() {
+    async changePassword() {
       this.resetErrors();
       
       if (this.form.newPassword.value.length<5 || this.form.newPassword.value.length>100) { // arbitrary
@@ -147,7 +164,7 @@ export default {
 .profileSetting{
   width:40%;
   margin:auto;
-  margin-bottom:0px;
+  margin-bottom:2vh;
   cursor:pointer;
 }
 
