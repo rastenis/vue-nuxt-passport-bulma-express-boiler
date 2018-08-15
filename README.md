@@ -1,4 +1,4 @@
-# [WIP]vue-nuxt-passport-bulma-express-boiler
+# vue-nuxt-passport-bulma-express-boiler
 
 > A vue/nuxtjs/passport/bulma boilerplate for express.
 
@@ -24,8 +24,8 @@ $ npm start
 ```
 ### TODO list
 
-1. Animations & completed alerts for various auth actions
-2. Profile page, account linking(technically operational, but no UI for it yet)
+1. ~~Animations & completed alerts for various auth actions~~
+2. ~~Profile page, account linking(technically operational, but no UI for it yet)~~
 
 #### Information & sources
 
