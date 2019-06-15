@@ -1,6 +1,6 @@
 {
   "name": "vue-nuxt-passport-bulma-express-boiler",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "A vue/nuxtjs/passport/bulma boilerplate for express.",
   "author": "Scharkee",
   "private": true,
