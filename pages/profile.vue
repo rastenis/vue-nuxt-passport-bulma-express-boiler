@@ -80,7 +80,7 @@
       <div class="box">Manage linked accounts</div>
       <div class="field">
         <label class="label">Google</label>
-        <p v-if="$store.state.user.data.google">
+        <p v-if="$store.state.user?$store.state.user.data.google:false">
           You have already linked your Google account.
           <a
             class="is-danger"
@@ -96,7 +96,7 @@
       </div>
       <div class="field">
         <label class="label">Twitter</label>
-        <p v-if="$store.state.user.data.twitter">
+        <p v-if="$store.state.user?$store.state.user.data.twitter:false">
           You have already linked your Twitter account.
           <a
             class="is-danger"
@@ -160,7 +160,8 @@ export default {
   },
   created() {
     if (!this.$store.state.user) {
-      return this.$router.replace({ path: "login" });
+      this.$router.replace({ path: "login" });
+      return;
     }
 
     // checking if account contains password i.e isn't created form a token of some sort

@@ -10,7 +10,7 @@ const config = {
 
 class User {
   constructor(data) {
-    if (typeof data === "undefined") {
+    if (!data) {
       this.data = {
         tokens: [],
         profile: {},
