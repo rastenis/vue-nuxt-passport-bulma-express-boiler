@@ -1,70 +1,101 @@
 <template>
   <section class="container">
     <div class="textCentered">
-      <h1 class="title">
-        PROFILE
-      </h1>
+      <h1 class="title">PROFILE</h1>
     </div>
     <hr>
     <div v-if="meta.hasPassword" class="profileSetting">
-      <div class="box">
-        Change password
-      </div> 
-        <form>
-          <div class="field">
-            <label class="label">Current Password</label>
-            <div class="control">
-              <input v-bind:class="getPasswordResetInputStyle('password')" type="password" name="password" v-model="form.password.value" placeholder="Current Password" value="">
-              <p v-if="form.password.error" class="help is-danger">{{form.password.errorMsg}}</p>
-            </div>
-          </div>
-          <div class="field">
-            <label class="label">New Password</label>
-            <div class="control">
-              <input v-bind:class="getPasswordResetInputStyle('newPassword')" type="password" placeholder="New Password" name="newPassword" v-model="form.newPassword.value" value="">
-              <p v-if="form.newPassword.error" class="help is-danger">{{form.newPassword.errorMsg}}</p>
-            </div>
-          </div>
-          <div class="field">
-            <label class="label">Repeat New Password</label>
-            <div class="control">
-              <input v-bind:class="getPasswordResetInputStyle('newPasswordRep')" type="password" placeholder="Repeat New Password" name="newPasswordRep" v-model="form.newPasswordRep.value" value="">
-              <p v-if="form.newPasswordRep.error" class="help is-danger">{{form.newPasswordRep.errorMsg}}</p>
-            </div>
-          </div>
+      <div class="box">Change password</div>
+      <form>
+        <div class="field">
+          <label class="label">Current Password</label>
           <div class="control">
-            <input type="button" class="button is-primary" @click="register()" value="Change password">
+            <input
+              v-bind:class="getPasswordResetInputStyle('password')"
+              type="password"
+              name="password"
+              v-model="form.password.value"
+              placeholder="Current Password"
+              value
+            >
+            <p v-if="form.password.error" class="help is-danger">{{form.password.errorMsg}}</p>
           </div>
-        </form>
+        </div>
+        <div class="field">
+          <label class="label">New Password</label>
+          <div class="control">
+            <input
+              v-bind:class="getPasswordResetInputStyle('newPassword')"
+              type="password"
+              placeholder="New Password"
+              name="newPassword"
+              v-model="form.newPassword.value"
+              value
+            >
+            <p v-if="form.newPassword.error" class="help is-danger">{{form.newPassword.errorMsg}}</p>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Repeat New Password</label>
+          <div class="control">
+            <input
+              v-bind:class="getPasswordResetInputStyle('newPasswordRep')"
+              type="password"
+              placeholder="Repeat New Password"
+              name="newPasswordRep"
+              v-model="form.newPasswordRep.value"
+              value
+            >
+            <p
+              v-if="form.newPasswordRep.error"
+              class="help is-danger"
+            >{{form.newPasswordRep.errorMsg}}</p>
+          </div>
+        </div>
+        <div class="control">
+          <input
+            type="button"
+            class="button is-primary"
+            @click="changePassword()"
+            value="Change password"
+          >
+        </div>
+      </form>
     </div>
     <div class="profileSetting">
-      <div class="box">
-        Manage linked accounts
-      </div> 
-          <div class="field">
-            <label class="label">Google</label>
-            <p v-if="$store.state.user.data.google">
-              You have already linked your Google account.
-            </p>
-            <div v-else>
-              <div class="button" type="link" style="margin-top:2vh;">
-                <img class="ic" src="/i/google.svg">
-                <a href="/auth/google" class="icon-adjusted">Link Google account</a>
-              </div>
-            </div>
+      <div class="box">Manage linked accounts</div>
+      <div class="field">
+        <label class="label">Google</label>
+        <p v-if="$store.state.user.data.google">
+          You have already linked your Google account.
+          <a
+            class="is-danger"
+            @click="unlink('google')"
+          >Unlink.</a>
+        </p>
+        <div v-else>
+          <div class="button" type="link" style="margin-top:2vh;">
+            <img class="ic" src="/i/google.svg">
+            <a href="/auth/google" class="icon-adjusted">Link Google account</a>
           </div>
-          <div class="field">
-            <label class="label">Twitter</label>
-            <p v-if="$store.state.user.data.twitter">
-              You have already linked your Twitter account.
-            </p>
-            <div v-else>
-              <div class="button" type="link" style="margin-top:1vh;">
-                <img class="ic" src="/i/twitter.svg">
-                <a href="/auth/twitter" class="icon-adjusted">Log in with Twitter</a>
-              </div>
-            </div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Twitter</label>
+        <p v-if="$store.state.user.data.twitter">
+          You have already linked your Twitter account.
+          <a
+            class="is-danger"
+            @click="unlink('twitter')"
+          >Unlink.</a>
+        </p>
+        <div v-else>
+          <div class="button" type="link" style="margin-top:1vh;">
+            <img class="ic" src="/i/twitter.svg">
+            <a href="/auth/twitter" class="icon-adjusted">Log in with Twitter</a>
           </div>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -75,42 +106,45 @@ import axios from "~/plugins/axios";
 export default {
   head() {
     return {
-      title: "Login",
+      title: "Login"
     };
   },
   data() {
     return {
-       form:{
-        password:{
-          error:false,
-          errorMsg:null,
-          value:""
+      form: {
+        password: {
+          error: false,
+          errorMsg: null,
+          value: ""
         },
-        newPassword:{
-          error:false,
-          errorMsg:null,
-          value:""
+        newPassword: {
+          error: false,
+          errorMsg: null,
+          value: ""
         },
-          newPasswordRep:{
-          error:false,
-          errorMsg:null,
-          value:""
+        newPasswordRep: {
+          error: false,
+          errorMsg: null,
+          value: ""
         }
       },
-      meta:{
-        hasPassword:false
+      meta: {
+        hasPassword: false
       }
     };
   },
-  created(){
+  created() {
     if (!this.$store.state.user) {
-      return this.$router.replace({ path: 'login' });
+      return this.$router.replace({ path: "login" });
     }
 
     // checking if account contains password i.e isn't created form a token of some sort
     // checking for hashed pw
-    if (this.$store.state.user.data.password!==null&&typeof this.$store.state.user.data.password!=='undefined') {
-      this.meta.hasPassword=true;
+    if (
+      this.$store.state.user.data.password !== null &&
+      typeof this.$store.state.user.data.password !== "undefined"
+    ) {
+      this.meta.hasPassword = true;
     }
   },
   methods: {
@@ -118,67 +152,91 @@ export default {
       //todo cleanup
       this.$parent.$parent.$children[1].msgOn(type, true, msg);
     },
-    getPasswordResetInputStyle:function getPasswordResetInputStyle(type){
-      let classes="input ";
+    getPasswordResetInputStyle: function getPasswordResetInputStyle(type) {
+      let classes = "input ";
       if (this.form[type].error) {
-        classes+="is-danger";
+        classes += "is-danger";
       }
       return classes;
     },
-    resetErrors(){
+    resetErrors() {
       for (const key in this.form) {
-        if (this.form.hasOwnProperty(key) ||typeof this.form[key].error !=="undefined") {
-          this.form[key].error=false;
+        if (
+          this.form.hasOwnProperty(key) ||
+          typeof this.form[key].error !== "undefined"
+        ) {
+          this.form[key].error = false;
         }
       }
     },
-    clearValues(){
+    clearValues() {
       for (const key in this.form) {
-        if (this.form.hasOwnProperty(key) ||typeof this.form[key].error !=="undefined") {
-          this.form[key].value="";
+        if (
+          this.form.hasOwnProperty(key) ||
+          typeof this.form[key].error !== "undefined"
+        ) {
+          this.form[key].value = "";
         }
       }
     },
     async changePassword() {
       this.resetErrors();
-      
-      if (this.form.newPassword.value.length<5 || this.form.newPassword.value.length>100) { // arbitrary
-        this.form.password.error=true;
-        this.form.password.errorMsg="Password must be between 5 and a 100 characters.";
+
+      if (
+        this.form.newPassword.value.length < 5 ||
+        this.form.newPassword.value.length > 100
+      ) {
+        // arbitrary
+        this.form.password.error = true;
+        this.form.password.errorMsg =
+          "Password must be between 5 and a 100 characters.";
         return;
       }
 
-      if (this.form.newPassword.value!==this.form.newPasswordRep.value) {
-        this.form.newPasswordRep.error=true;
-        this.form.newPasswordRep.errorMsg="Passwords do not match!";
+      if (this.form.newPassword.value !== this.form.newPasswordRep.value) {
+        this.form.newPasswordRep.error = true;
+        this.form.newPasswordRep.errorMsg = "Passwords do not match!";
         return;
       }
 
       try {
-        await this.$store.dispatch('changePassword', {
+        await this.$store.dispatch("changePassword", {
           password: this.form.password.value,
           newPassword: this.form.newPassword.value,
           newPasswordRep: this.form.newPasswordRep.value
         });
         this.clearValues();
-        this.msg( 'info', true, "You have successfully changed your password!");
-        this.$router.push('/');
+        this.msg("info", true, "You have successfully changed your password!");
+        this.$router.push("/");
       } catch (err) {
-        this.msg( 'error', true,err.meta.msg);
+        this.msg("error", true, err.meta.msg);
       }
     },
+    async unlink(target) {
+      this.resetErrors();
 
+      try {
+        await this.$store.dispatch("unlink", {
+          toUnlink: target
+        });
+        this.msg(
+          "info",
+          true,
+          `You have successfully unlinked your ${target} account!`
+        );
+      } catch (err) {
+        this.msg("error", true, err.meta.msg);
+      }
+    }
   }
 };
 </script>
 
 <style scoped>
-.profileSetting{
-  width:40%;
-  margin:auto;
-  margin-bottom:2vh;
-  cursor:pointer;
+.profileSetting {
+  width: 40%;
+  margin: auto;
+  margin-bottom: 2vh;
+  cursor: pointer;
 }
-
-
 </style>
