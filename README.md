@@ -26,6 +26,7 @@ $ npm start
 
 1. ~~Animations & completed alerts for various auth actions~~
 2. ~~Profile page, account linking(technically operational, but no UI for it yet)~~
+3. ~~Guided setup
 
 #### Information & sources
 

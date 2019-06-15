@@ -6,7 +6,7 @@ const { Strategy: TwitterStrategy } = require("passport-twitter");
 const { OAuth2Strategy: GoogleStrategy } = require("passport-google-oauth");
 
 const db = require("../src/external/db.js");
-const keysConf = require("../passportKeys.json");
+const keysConf = require("../config/passportKeys.json");
 const User = require("../src/controllers/user.js");
 
 passport.serializeUser((user, done) => {
@@ -84,7 +84,7 @@ passport.use(
  *       - Else create a new account.
  */
 
-/* 
+/*
  * Sign in with Twitter.
  */
 passport.use(
