@@ -2,7 +2,7 @@
   <div class="mainCont">
     <mainHeader/>
     <messageSpace/>
-    <nuxt/> 
+    <nuxt/>
     <mainFooter/>
   </div>
 </template>
@@ -47,8 +47,8 @@ export default {
   padding-left: 6px;
 }
 
-.ic{
-  width:22px;
-  height:22px;
+.ic {
+  width: 22px;
+  height: 22px;
 }
 </style>

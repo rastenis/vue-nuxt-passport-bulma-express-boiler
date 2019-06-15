@@ -37,7 +37,7 @@
   </section>
 </template>
 
-<script>
+<script> 
 import axios from "~/plugins/axios";
 
 export default {

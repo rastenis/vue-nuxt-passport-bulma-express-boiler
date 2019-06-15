@@ -11,14 +11,17 @@ const db = {
 };
 
 // making usernames unique
-db.users.ensureIndex({
-  fieldName: "email",
-  unique: true,
-  sparse: true
-}, function(err) {
-  if (err) {
-    console.error(err);
+db.users.ensureIndex(
+  {
+    fieldName: "email",
+    unique: true,
+    sparse: true
+  },
+  function(err) {
+    if (err) {
+      console.error(err);
+    }
   }
-});
+);
 
 module.exports = db;

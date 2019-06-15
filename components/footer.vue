@@ -5,3 +5,4 @@
     <a href="https://github.com/Scharkee/vue-nuxt-passport-bulma-express-boiler" target="_blank">vue-nuxt-passport-bulma-express-boiler</a>
   </footer>
 </template>
+ 

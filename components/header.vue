@@ -13,7 +13,7 @@
       </div>
   </nav>
 </template>
-
+ 
 <script>
 import axios from "~/plugins/axios";
 
@@ -32,7 +32,6 @@ export default {
       // TODO: clean this call up
       this.$parent.$children[1].msgOn( "info",true, msg);
     },
-
   },
 };
 </script>

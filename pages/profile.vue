@@ -33,7 +33,7 @@
               value
             >
             <p v-if="form.newPassword.error" class="help is-danger">{{form.newPassword.errorMsg}}</p>
-          </div>
+          </div> 
         </div>
         <div class="field">
           <label class="label">Repeat New Password</label>
