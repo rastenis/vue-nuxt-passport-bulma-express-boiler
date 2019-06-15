@@ -104,6 +104,25 @@ const store = () =>
             commit("SET_USER", modifiedUser);
           });
       },
+      unlink({ commit }, { toUnlink }) {
+        return axios({
+          method: "post",
+          url: "/unlink",
+          credentials: "same-origin",
+          data: {
+            toUnlink
+          }
+        })
+          .then(res => {
+            if (res.data.meta.error === true) {
+              throw res.data;
+            }
+            return res.data.user;
+          })
+          .then(modifiedUser => {
+            commit("SET_USER", modifiedUser);
+          });
+      },
       logout({ commit }) {
         return axios({
           method: "post",

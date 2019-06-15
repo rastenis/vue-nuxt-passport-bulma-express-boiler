@@ -288,6 +288,31 @@ app.patch("/changePassword", (req, res) => {
     });
 });
 
+// route to clear linked accounts
+app.post("/unlink", (req, res) => {
+  if (typeof req.user === "undefined") {
+    return;
+  }
+
+  let user = new User(req.user.data);
+
+  user.data.tokens = user.data.tokens.filter(t => {
+    return t.kind != req.body.toUnlink;
+  });
+
+  delete user.data[req.body.toUnlink];
+
+  user.saveUser().then(r => {
+    return res.json({
+      user: user,
+      meta: {
+        error: false,
+        msg: `You have successfully unlinked your ${req.body.toUnlink} account!`
+      }
+    });
+  });
+});
+
 /*
 Sample Passportjs routes
 */
