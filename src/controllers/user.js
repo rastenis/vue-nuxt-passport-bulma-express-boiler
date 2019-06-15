@@ -176,6 +176,23 @@ class User {
     });
   }
 
+  deleteUser() {
+    return new Promise((resolve, reject) => {
+      db.users.remove(
+        {
+          _id: this.data._id
+        },
+        err => {
+          if (err) {
+            console.error(err);
+            return reject(err);
+          }
+          return resolve();
+        }
+      );
+    });
+  }
+
   comparePassword(candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.data.password, (err, isMatch) => {
       cb(err, isMatch);
