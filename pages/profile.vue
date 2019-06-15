@@ -1,9 +1,23 @@
 <template>
   <section class="container">
-    <div class="textCentered">
+    <div class="has-text-centered">
       <h1 class="title">PROFILE</h1>
     </div>
     <hr>
+    <div class="modal" v-bind:class="{'is-active':modals.main.open}">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="box has-text-centered">
+          <p>{{modals.main.msg}}</p>
+          <hr>
+          <div class="has-text-centered">
+            <button class="button" @click="askConfirmation(false)" >Cancel</button>
+            <button class="button is-danger" @click="modals.main.callback(); askConfirmation(false)" >Yes</button>
+          </div>
+        </div>
+      </div>
+      <button class="modal-close is-large" aria-label="close"></button>
+    </div>
     <div v-if="meta.hasPassword" class="profileSetting">
       <div class="box">Change password</div>
       <form>
@@ -96,6 +110,10 @@
           </div>
         </div>
       </div>
+      <hr>
+      <div style="text-align: center;">
+        <a style="color:DarkRed;" @click="askConfirmation(true, 'Are you sure? This is irreversible.', deleteAccount)"> Delete account </a>
+      </div>
     </div>
   </section>
 </template>
@@ -130,6 +148,13 @@ export default {
       },
       meta: {
         hasPassword: false
+      },
+      modals: {
+        main: {
+          open: false,
+          msg: "",
+          callback: null
+        }
       }
     };
   },
@@ -151,6 +176,11 @@ export default {
     msg(type, state, msg) {
       //todo cleanup
       this.$parent.$parent.$children[1].msgOn(type, true, msg);
+    },
+    askConfirmation(show, msg, cb) {
+      this.modals.main.msg = msg;
+      this.modals.main.open = show;
+      this.modals.main.callback = cb;
     },
     getPasswordResetInputStyle: function getPasswordResetInputStyle(type) {
       let classes = "input ";
@@ -224,6 +254,19 @@ export default {
           true,
           `You have successfully unlinked your ${target} account!`
         );
+      } catch (err) {
+        this.msg("error", true, err.meta.msg);
+      }
+    },
+    async deleteAccount() {
+     try {
+        await this.$store.dispatch("deleteAccount", {});
+        this.msg(
+          "info",
+          true,
+          `You have successfully deleted your account!`
+        );
+        this.$router.push("/");
       } catch (err) {
         this.msg("error", true, err.meta.msg);
       }
