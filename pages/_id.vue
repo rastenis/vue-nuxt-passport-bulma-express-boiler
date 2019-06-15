@@ -1,5 +1,5 @@
 <template>
-  <section class="container">
+  <section v-if="$store.state.user" class="container">
     <img src="~assets/img/logo.png" alt="Nuxt.js Logo" class="logo">
     <h1 class="title">User</h1>
     <h2 class="info">{{ user.name }}</h2>
@@ -26,7 +26,15 @@ export default {
     return {
       title: `User: ${this.user.name}`
     };
-  }
+  },  
+  created() {
+    if (!this.$store.state.user) {
+      this.$router.push( "/login");
+      return;
+    }
+  },
+   
+  
 };
 </script>
 

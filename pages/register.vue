@@ -1,5 +1,5 @@
 <template>
-  <section class="container">
+  <section v-if="!$store.state.user" class="container">
     <div class="has-text-centered">
       <h1 class="title">REGISTER</h1>
     </div>
@@ -67,9 +67,9 @@ export default {
     };
   },
   created() {
-    console.log(this.$store.state);
     if (this.$store.state.user) {
-      this.$router.replace({ path: "/" });
+      this.$router.push( "/");
+      return;
     }
   },
   methods: {

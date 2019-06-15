@@ -1,5 +1,5 @@
 <template>
-  <section class="container">
+  <section v-if="!$store.state.user" class="container">
     <div class="has-text-centered">
       <h1 class="title">LOGIN</h1>
     </div>
@@ -52,6 +52,12 @@ export default {
         error: null
       }
     };
+  },
+  created() {
+    if (this.$store.state.user) {
+      this.$router.push( "/");
+      return;
+    }
   },
   methods: {
     async login() {
