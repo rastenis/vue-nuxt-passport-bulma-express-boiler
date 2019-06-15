@@ -123,6 +123,15 @@ const store = () =>
             commit("SET_USER", modifiedUser);
           });
       },
+      deleteAccount({ commit }) {
+        return axios({
+          method: "post",
+          url: "/deleteAccount",
+          credentials: "same-origin"
+        }).then(() => {
+          commit("SET_USER", null);
+        });
+      },
       logout({ commit }) {
         return axios({
           method: "post",

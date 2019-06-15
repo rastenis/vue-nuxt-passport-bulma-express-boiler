@@ -313,6 +313,24 @@ app.post("/unlink", (req, res) => {
   });
 });
 
+// route to delete account
+app.post("/deleteAccount", (req, res) => {
+  if (typeof req.user === "undefined") {
+    return;
+  }
+
+  let user = new User(req.user.data);
+
+  user.deleteUser().then(r => {
+    return res.json({
+      meta: {
+        error: false,
+        msg: `You have successfully deleted your account!`
+      }
+    });
+  });
+});
+
 /*
 Sample Passportjs routes
 */

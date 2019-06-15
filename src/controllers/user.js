@@ -10,7 +10,7 @@ const config = {
 
 class User {
   constructor(data) {
-    if (typeof data === "undefined") {
+    if (!data) {
       this.data = {
         tokens: [],
         profile: {},
@@ -173,6 +173,23 @@ class User {
           }
         );
       }
+    });
+  }
+
+  deleteUser() {
+    return new Promise((resolve, reject) => {
+      db.users.remove(
+        {
+          _id: this.data._id
+        },
+        err => {
+          if (err) {
+            console.error(err);
+            return reject(err);
+          }
+          return resolve();
+        }
+      );
     });
   }
 

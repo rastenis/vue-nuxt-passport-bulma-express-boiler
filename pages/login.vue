@@ -1,25 +1,23 @@
 <template>
   <section class="container">
-    <div class="textCentered">
-      <h1 class="title">
-        LOGIN
-      </h1>
+    <div class="has-text-centered">
+      <h1 class="title">LOGIN</h1>
     </div>
     <hr>
     <form action="/login" method="POST">
       <div class="field">
         <label class="label">Email</label>
         <div class="control">
-          <input class="input" type="text" v-model="form.email" placeholder="Email" value="">
+          <input class="input" type="text" v-model="form.email" placeholder="Email" value>
         </div>
       </div>
       <div class="field">
         <label class="label">Password</label>
         <div class="control">
-          <input class="input" type="password" v-model="form.password" placeholder="Password"  value="">
+          <input class="input" type="password" v-model="form.password" placeholder="Password" value>
         </div>
       </div>
-      
+
       <div class="control">
         <input type="button" class="button is-link" @click="login()" value="Log in">
       </div>
@@ -28,7 +26,7 @@
           <img class="ic" src="/i/google.svg">
           <a href="/auth/google" class="icon-adjusted">Log in with Google</a>
         </div>
-         <div class="button" type="link" style="margin-top:1vh;">
+        <div class="button" type="link" style="margin-top:1vh;">
           <img class="ic" src="/i/twitter.svg">
           <a href="/auth/twitter" class="icon-adjusted">Log in with Twitter</a>
         </div>
@@ -37,13 +35,13 @@
   </section>
 </template>
 
-<script> 
+<script>
 import axios from "~/plugins/axios";
 
 export default {
   head() {
     return {
-      title: "Login",
+      title: "Login"
     };
   },
   data() {
@@ -52,8 +50,7 @@ export default {
         email: "",
         password: "",
         error: null
-      },
-      
+      }
     };
   },
   methods: {
@@ -86,6 +83,4 @@ form {
   width: 15vw;
   margin: auto;
 }
-
-
 </style>
