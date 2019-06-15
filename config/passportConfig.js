@@ -1,6 +1,5 @@
 require("dotenv").config();
 const passport = require("passport");
-const request = require("request");
 const { Strategy: LocalStrategy } = require("passport-local");
 const { Strategy: TwitterStrategy } = require("passport-twitter");
 const { OAuth2Strategy: GoogleStrategy } = require("passport-google-oauth");
@@ -8,6 +7,7 @@ const { OAuth2Strategy: GoogleStrategy } = require("passport-google-oauth");
 const db = require("../src/external/db.js");
 const keysConf = require("../config/passportKeys.json");
 const User = require("../src/controllers/user.js");
+const config = require("./config.json");
 
 passport.serializeUser((user, done) => {
   done(null, user.data._id);
@@ -92,7 +92,7 @@ passport.use(
     {
       consumerKey: keysConf.TWITTER_KEY,
       consumerSecret: keysConf.TWITTER_SECRET,
-      callbackURL: "/auth/twitter/callback",
+      callbackURL: `${config.url || ""}/auth/twitter/callback`,
       passReqToCallback: true
     },
     (req, accessToken, tokenSecret, profile, done) => {
@@ -203,7 +203,7 @@ passport.use(
     {
       clientID: keysConf.GOOGLE_ID,
       clientSecret: keysConf.GOOGLE_SECRET,
-      callbackURL: "/auth/google/callback",
+      callbackURL: `${config.url || ""}/auth/google/callback`,
       passReqToCallback: true
     },
     (req, accessToken, refreshToken, profile, done) => {
@@ -241,12 +241,14 @@ passport.use(
                     kind: "google",
                     accessToken
                   });
+
                   user.data.profile.name =
                     user.data.profile.name || profile.displayName;
                   user.data.profile.gender =
                     user.data.profile.gender || profile._json.gender;
                   user.data.profile.picture =
-                    user.data.profile.picture || profile._json.image.url;
+                    user.data.profile.picture || profile._json.picture;
+
                   user
                     .saveUser()
                     .then(r => {
@@ -309,7 +311,7 @@ passport.use(
                   });
                   user.data.profile.name = profile.displayName;
                   user.data.profile.gender = profile._json.gender;
-                  user.data.profile.picture = profile._json.image.url;
+                  user.data.profile.picture = profile._json.picture;
                   user
                     .saveUser()
                     .then(r => {
