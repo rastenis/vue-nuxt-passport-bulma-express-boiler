@@ -106,12 +106,12 @@ passport.use(
               return done(err);
             }
             if (existingUser) {
-              req.flash("error", "This twitter account is already linked.");
+              req.flash("error", "This Twitter account is already linked.");
               return done(err);
             }
 
             // linking twitter with existing logged in account
-            let user = new User(existingUser);
+            let user = new User(req.user.data);
             user.data.twitter = profile.id;
             user.data.tokens.push({
               kind: "twitter",
@@ -172,7 +172,7 @@ passport.use(
             user
               .saveUser()
               .then(r => {
-                req.flash("info", "Created new account via twitter!");
+                req.flash("info", "Created new account via Twitter!");
                 done(null, user);
               })
               .catch(err => {
@@ -197,133 +197,110 @@ passport.use(
       passReqToCallback: true
     },
     (req, accessToken, refreshToken, profile, done) => {
-      if (typeof req.user !== "undefined") {
-        //linking google with existing account
-        db.users.findOne(
-          {
-            google: profile.id
-          },
-          (err, doc) => {
-            if (err) {
-              return done(err);
-            }
-            if (doc) {
-              res.json({
+      db.users.findOne(
+        {
+          google: profile.id
+        },
+        (err, doc) => {
+          if (err) {
+            return done(err);
+          }
+          if (doc) {
+            if (req.user) {
+              // reject link attempt
+              return res.json({
                 meta: {
                   error: true,
-                  msg: "This google account is already linked."
+                  msg: "This Google account is already linked."
                 }
               });
-              done(err);
-            } else {
-              // fetching the existing logged in user & linking it with the google account
-              db.users.findOne(
-                {
-                  _id: req.user.data._id
-                },
-                (err, user) => {
+            }
+            // log in with existing google account
+            return done(null, new User(doc));
+          }
+
+          if (req.user) {
+            // link Google
+            user = new User(req.user.data);
+            user.data.google = profile.id;
+            user.data.tokens.push({
+              kind: "google",
+              accessToken
+            });
+
+            user.data.profile.name =
+              user.data.profile.name || profile.displayName;
+            user.data.profile.gender =
+              user.data.profile.gender || profile._json.gender;
+            user.data.profile.picture =
+              user.data.profile.picture || profile._json.picture;
+
+            user
+              .saveUser()
+              .then(r => {
+                req.logIn(r, err => {
                   if (err) {
+                    console.error(err);
                     return done(err);
                   }
-                  user = new User(user);
-                  user.data.google = profile.id;
-                  user.data.tokens.push({
-                    kind: "google",
-                    accessToken
-                  });
-
-                  user.data.profile.name =
-                    user.data.profile.name || profile.displayName;
-                  user.data.profile.gender =
-                    user.data.profile.gender || profile._json.gender;
-                  user.data.profile.picture =
-                    user.data.profile.picture || profile._json.picture;
-
-                  user
-                    .saveUser()
-                    .then(r => {
-                      req.logIn(r, err => {
-                        if (err) {
-                          console.error(err);
-                          return done(err);
-                        }
-                        req.flash("info", "Google linked successfully!");
-                        done(null, user);
-                      });
-                    })
-                    .catch(err => {
-                      done(err, user);
-                    });
-                }
-              );
-            }
+                  req.flash("info", "Google linked successfully!");
+                  done(null, user);
+                });
+              })
+              .catch(err => {
+                done(err, user);
+              });
+            return;
           }
-        );
-      } else {
-        db.users.findOne(
-          {
-            google: profile.id
-          },
-          (err, doc) => {
-            if (err) {
-              return done(err);
-            }
-            if (doc) {
-              // log in with existing google account
-              return done(null, new User(doc));
-            }
 
-            // create a google account
-            db.users.findOne(
-              {
-                email: profile.emails[0].value
-              },
-              (err, accountsWithThatEmail) => {
-                if (err) {
-                  return done(err);
-                }
-                if (accountsWithThatEmail) {
-                  req.flash(
-                    "error",
-                    "An account with that google email already exists!"
-                  );
-                  done(err);
-                } else {
-                  console.log("making new account with google");
-
-                  const user = new User();
-                  user._meta.noPassword = true;
-                  user.data.email = profile.emails[0].value;
-                  user.data.google = profile.id;
-                  user.data.tokens.push({
-                    kind: "google",
-                    accessToken
-                  });
-                  user.data.profile.name = profile.displayName;
-                  user.data.profile.gender = profile._json.gender;
-                  user.data.profile.picture = profile._json.picture;
-                  user
-                    .saveUser()
-                    .then(r => {
-                      req.logIn(r, err => {
-                        if (err) {
-                          console.error(err);
-                          return done(err);
-                        }
-
-                        req.flash("info", "Created new account via google!");
-                        done(null, user);
-                      });
-                    })
-                    .catch(err => {
-                      done(err, user);
-                    });
-                }
+          // create a Google auth based account
+          db.users.findOne(
+            {
+              email: profile.emails[0].value
+            },
+            (err, accountsWithThatEmail) => {
+              if (err) {
+                return done(err);
               }
-            );
-          }
-        );
-      }
+              if (accountsWithThatEmail) {
+                req.flash(
+                  "error",
+                  "An account with that google email already exists!"
+                );
+                done(err);
+              } else {
+                const user = new User();
+                user._meta.noPassword = true;
+                user.data.email = profile.emails[0].value;
+                user.data.google = profile.id;
+                user.data.tokens.push({
+                  kind: "google",
+                  accessToken
+                });
+                user.data.profile.name = profile.displayName;
+                user.data.profile.gender = profile._json.gender;
+                user.data.profile.picture = profile._json.picture;
+                user
+                  .saveUser()
+                  .then(r => {
+                    req.logIn(r, err => {
+                      if (err) {
+                        console.error(err);
+                        return done(err);
+                      }
+
+                      req.flash("info", "Created new account via Google!");
+                      done(null, user);
+                    });
+                  })
+                  .catch(err => {
+                    done(err, user);
+                  });
+              }
+            }
+          );
+        }
+      );
     }
   )
 );
