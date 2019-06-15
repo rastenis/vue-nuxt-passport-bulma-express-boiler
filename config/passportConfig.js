@@ -96,7 +96,7 @@ passport.use(
       passReqToCallback: true
     },
     (req, accessToken, tokenSecret, profile, done) => {
-      if (typeof req.user !== "undefined") {
+      if (req.user) {
         db.users.findOne(
           {
             twitter: profile.id
@@ -111,44 +111,34 @@ passport.use(
             }
 
             // linking twitter with existing logged in account
-            db.users.findOne(
-              {
-                _id: req.user.data._id
-              },
-              (err, user) => {
-                if (err) {
-                  return done(err);
-                }
-                user = new User(user);
-                user.data.twitter = profile.id;
-                user.data.tokens.push({
-                  kind: "twitter",
-                  accessToken,
-                  tokenSecret
-                });
-                user.data.profile.name =
-                  user.data.profile.name || profile.displayName;
-                user.data.profile.location =
-                  user.data.profile.location || profile._json.location;
-                user.data.profile.picture =
-                  user.data.profile.picture ||
-                  profile._json.profile_image_url_https;
+            let user = new User(existingUser);
+            user.data.twitter = profile.id;
+            user.data.tokens.push({
+              kind: "twitter",
+              accessToken,
+              tokenSecret
+            });
+            user.data.profile.name =
+              user.data.profile.name || profile.displayName;
+            user.data.profile.location =
+              user.data.profile.location || profile._json.location;
+            user.data.profile.picture =
+              user.data.profile.picture ||
+              profile._json.profile_image_url_https;
 
-                user
-                  .saveUser()
-                  .then(r => {
-                    req.logIn(r, err => {
-                      if (err) {
-                        console.error(err);
-                        return next(err);
-                      }
-                    });
-                    req.flash("info", "Twitter linked successfully!");
-                    done(err, user);
-                  })
-                  .catch(e => done(err));
-              }
-            );
+            user
+              .saveUser()
+              .then(r => {
+                req.logIn(r, err => {
+                  if (err) {
+                    console.error(err);
+                    return next(err);
+                  }
+                });
+                req.flash("info", "Twitter linked successfully!");
+                done(err, user);
+              })
+              .catch(e => done(err));
           }
         );
       } else {
