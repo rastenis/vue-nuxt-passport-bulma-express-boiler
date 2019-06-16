@@ -9,9 +9,7 @@ const keysConf = require("../config/passportKeys.json");
 const User = require("../src/controllers/user.js");
 const config = require("./config.json");
 
-passport.serializeUser((user, done) => {
-  done(null, user.data._id);
-});
+passport.serializeUser((user, done) => done(null, user.data._id));
 
 passport.deserializeUser((id, done) => {
   db.users.findOne(
@@ -23,7 +21,7 @@ passport.deserializeUser((id, done) => {
         console.error(err);
       }
       user = new User(user);
-      done(err, user);
+      return done(err, user);
     }
   );
 });
@@ -96,20 +94,23 @@ passport.use(
       passReqToCallback: true
     },
     (req, accessToken, tokenSecret, profile, done) => {
-      if (req.user) {
-        db.users.findOne(
-          {
-            twitter: profile.id
-          },
-          (err, existingUser) => {
-            if (err) {
-              return done(err);
-            }
-            if (existingUser) {
+      db.users.findOne(
+        {
+          twitter: profile.id
+        },
+        (err, existingUser) => {
+          if (err) {
+            return done(err);
+          }
+          if (existingUser) {
+            if (req.user) {
               req.flash("error", "This Twitter account is already linked.");
               return done(err);
             }
+            return done(null, new User(existingUser));
+          }
 
+          if (req.user) {
             // linking twitter with existing logged in account
             let user = new User(req.user.data);
             user.data.twitter = profile.id;
@@ -136,51 +137,38 @@ passport.use(
                   }
                 });
                 req.flash("info", "Twitter linked successfully!");
-                done(err, user);
+                return done(err, user);
               })
-              .catch(e => done(err));
+              .catch(e => done(e));
+            // exit out
+            return;
           }
-        );
-      } else {
-        // creating a brand new account with twitter
-        db.users.findOne(
-          {
-            twitter: profile.id
-          },
-          (err, existingUser) => {
-            if (err) {
-              return done(err);
-            }
-            if (existingUser) {
-              return done(null, new User(existingUser));
-            }
-            const user = new User();
-            // Twitter will not provide an email address.  Period.
-            // But a person’s twitter username is guaranteed to be unique
-            // so we can "fake" a twitter email address as follows:
-            user.data.email = `${profile.username}@twitter.com`;
-            user._meta.noPassword = true;
-            user.data.twitter = profile.id;
-            user.data.tokens.push({
-              kind: "twitter",
-              accessToken,
-              tokenSecret
-            });
-            user.data.profile.name = profile.displayName;
-            user.data.profile.location = profile._json.location;
-            user.data.profile.picture = profile._json.profile_image_url_https;
-            user
-              .saveUser()
-              .then(r => {
-                req.flash("info", "Created new account via Twitter!");
-                done(null, user);
-              })
-              .catch(err => {
-                done(err, user);
-              });
-          }
-        );
-      }
+
+          // create new user
+          const user = new User();
+          // Twitter will not provide an email address.  Period.
+          // But a person’s twitter username is guaranteed to be unique
+          // so we can "fake" a twitter email address as follows:
+          user.data.email = `${profile.username}@twitter.com`;
+          user._meta.noPassword = true;
+          user.data.twitter = profile.id;
+          user.data.tokens.push({
+            kind: "twitter",
+            accessToken,
+            tokenSecret
+          });
+          user.data.profile.name = profile.displayName;
+          user.data.profile.location = profile._json.location;
+          user.data.profile.picture = profile._json.profile_image_url_https;
+          user
+            .saveUser()
+            .then(r => {
+              req.flash("info", "Created new account via Twitter!");
+              return done(null, user);
+            })
+            .catch(err => done(err, user));
+        }
+      );
     }
   )
 );
@@ -244,16 +232,14 @@ passport.use(
                     return done(err);
                   }
                   req.flash("info", "Google linked successfully!");
-                  done(null, user);
+                  return done(null, user);
                 });
               })
-              .catch(err => {
-                done(err, user);
-              });
+              .catch(err => done(err, user));
             return;
           }
 
-          // create a Google auth based account
+          // create a Google auth based account, if the email isn't taken
           db.users.findOne(
             {
               email: profile.emails[0].value
@@ -267,7 +253,7 @@ passport.use(
                   "error",
                   "An account with that google email already exists!"
                 );
-                done(err);
+                return done(err);
               } else {
                 const user = new User();
                 user._meta.noPassword = true;
@@ -290,12 +276,10 @@ passport.use(
                       }
 
                       req.flash("info", "Created new account via Google!");
-                      done(null, user);
+                      return done(null, user);
                     });
                   })
-                  .catch(err => {
-                    done(err, user);
-                  });
+                  .catch(err => done(err, user));
               }
             }
           );
@@ -322,8 +306,8 @@ exports.isAuthorized = (req, res, next) => {
   const provider = req.path.split("/").slice(-1)[0];
   const token = req.user.data.tokens.find(token => token.kind === provider);
   if (token) {
-    next();
-  } else {
-    res.redirect(`/auth/${provider}`);
+    return next();
   }
+
+  res.redirect(`/auth/${provider}`);
 };
