@@ -202,12 +202,8 @@ passport.use(
           if (doc) {
             if (req.user) {
               // reject link attempt
-              return res.json({
-                meta: {
-                  error: true,
-                  msg: "This Google account is already linked."
-                }
-              });
+              req.flash("error", "That Google account is already linked!");
+              return done(err);
             }
             // log in with existing google account
             return done(null, new User(doc));
@@ -257,7 +253,7 @@ passport.use(
               if (accountsWithThatEmail) {
                 req.flash(
                   "error",
-                  "An account with that google email already exists!"
+                  "An account with that Google email already exists!"
                 );
                 return done(err);
               } else {

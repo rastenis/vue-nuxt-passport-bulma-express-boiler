@@ -14,7 +14,6 @@ const bcrypt = require("bcrypt");
 const flash = require("flash");
 
 const utils = require("./external/utilities.js");
-
 const apiRoutes = require("./routes/users.js");
 
 /*
@@ -60,7 +59,7 @@ if (config.self_hosted === "1") {
         opts.email = config.tls.email;
         opts.agreeTos = config.tls.agree_tos === "1";
       }
-      cb(null, {
+      return cb(null, {
         options: opts,
         certs
       });
@@ -108,7 +107,7 @@ Login post route
 app.post("/login", (req, res) => {
   utils.log(`LOGIN | requester: ${req.body.email}`, 0);
 
-  if (typeof req.user !== "undefined") {
+  if (req.user) {
     return;
   }
 
