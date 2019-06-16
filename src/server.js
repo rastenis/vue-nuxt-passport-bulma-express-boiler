@@ -153,10 +153,13 @@ app.post("/login", (req, res) => {
 Register post route
 */
 app.post("/register", (req, res, next) => {
-  utils.log(`REGISTER | requester: ${req.body.email}`, 0);
-
-  if (typeof req.user !== "undefined") {
-    return;
+  if (req.user) {
+    return res.json({
+      meta: {
+        error: true,
+        msg: "You're already logged in!"
+      }
+    });
   }
 
   // mirrored validation checks
@@ -177,50 +180,62 @@ app.post("/register", (req, res, next) => {
     });
   }
 
-  db.users.insert(
-    {
-      email: req.body.email.toLowerCase(),
-      password: bcrypt.hashSync(req.body.password, config.bcrypt_salt_rounds)
-    },
-    (err, newDoc) => {
-      // error handling
-      if (err) {
-        if (err.errorType === "uniqueViolated") {
-          return res.json({
-            meta: {
-              error: true,
-              msg: "User with given email already exists!"
+  bcrypt
+    .hash(req.body.password, config.bcrypt_salt_rounds)
+    .then(hashed => {
+      db.users.insert(
+        {
+          email: req.body.email.toLowerCase(),
+          password: hashed
+        },
+        (err, newDoc) => {
+          // error handling
+          if (err) {
+            if (err.errorType === "uniqueViolated") {
+              return res.json({
+                meta: {
+                  error: true,
+                  msg: "User with given email already exists!"
+                }
+              });
+            } else {
+              utils.log(err, 1);
+              return res.json({
+                meta: {
+                  error: true,
+                  msg: "Server error. Try again later."
+                }
+              });
+            }
+          }
+
+          newDoc = new User(newDoc);
+          req.logIn(newDoc, err => {
+            if (err) {
+              utils.log(err, 1);
+              return next(err);
             }
           });
-        } else {
-          utils.log(err, 1);
+
+          // success!
           return res.json({
             meta: {
-              error: true,
-              msg: "Server error. Try again later."
-            }
+              error: false,
+              msg: "You have successfully registered!"
+            },
+            user: newDoc
           });
         }
-      }
-
-      newDoc = new User(newDoc);
-      req.logIn(newDoc, err => {
-        if (err) {
-          utils.log(err, 1);
-          return next(err);
-        }
-      });
-
-      // success!
+      );
+    })
+    .catch(err => {
       return res.json({
         meta: {
-          error: false,
-          msg: "You have successfully registered!"
-        },
-        user: newDoc
+          error: true,
+          msg: "Internal error. Please try again later!"
+        }
       });
-    }
-  );
+    });
 });
 
 // user logout route
@@ -322,11 +337,21 @@ app.post("/deleteAccount", (req, res) => {
   let user = new User(req.user.data);
 
   user.deleteUser().then(r => {
-    return res.json({
-      meta: {
-        error: false,
-        msg: `You have successfully deleted your account!`
+    req.session.destroy(err => {
+      if (err) {
+        utils.log(
+          "Error : Failed to destroy the session during logout." + err,
+          1
+        );
       }
+      req.user = null;
+      req.flash("info", "You have successfully deleted your account!");
+
+      return res.json({
+        meta: {
+          error: false
+        }
+      });
     });
   });
 });
