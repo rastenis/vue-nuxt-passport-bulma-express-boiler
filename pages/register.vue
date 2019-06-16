@@ -28,6 +28,7 @@
             placeholder="Password"
             name="password"
             v-model="form.password.value"
+            @keyup.enter="register()"
             value
           >
           <p v-if="form.password.error" class="help is-danger">{{form.password.errorMsg}}</p>
@@ -68,7 +69,7 @@ export default {
   },
   created() {
     if (this.$store.state.user) {
-      this.$router.push( "/");
+      this.$router.push("/");
       return;
     }
   },

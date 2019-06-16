@@ -61,6 +61,7 @@
               placeholder="Repeat New Password"
               name="newPasswordRep"
               v-model="form.newPasswordRep.value"
+              @keyup.enter="changePassword()"
               value
             >
             <p
@@ -244,7 +245,6 @@ export default {
         });
         this.clearValues();
         this.msg("info", true, "You have successfully changed your password!");
-        this.$router.push("/");
       } catch (err) {
         this.msg("error", true, err.meta.msg);
       }

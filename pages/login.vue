@@ -14,7 +14,14 @@
       <div class="field">
         <label class="label">Password</label>
         <div class="control">
-          <input class="input" type="password" v-model="form.password" placeholder="Password" value>
+          <input
+            class="input"
+            type="password"
+            v-model="form.password"
+            placeholder="Password"
+            @keyup.enter="login()"
+            value
+          >
         </div>
       </div>
 
@@ -55,7 +62,7 @@ export default {
   },
   created() {
     if (this.$store.state.user) {
-      this.$router.push( "/");
+      this.$router.push("/");
       return;
     }
   },

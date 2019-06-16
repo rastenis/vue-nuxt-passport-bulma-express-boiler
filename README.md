@@ -8,8 +8,8 @@ Demo website coming soon™.
 
 You'll have to set up api keys in `passportKeys.json`. This template contains Google and Twitter logins, but more can be added easily, as they're modular passportJS strategies.
 
-* The process for obtaining a Google key is described [here](https://developers.google.com/identity/protocols/OAuth2).
-* The process for obtaining a Twitter key is described [here](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html).
+- The process for obtaining a Google key is described [here](https://developers.google.com/identity/protocols/OAuth2).
+- The process for obtaining a Twitter key is described [here](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html).
 
 ```bash
 # install dependencies
@@ -22,11 +22,12 @@ $ npm run dev
 $ npm build
 $ npm start
 ```
+
 ### TODO list
 
 1. ~~Animations & completed alerts for various auth actions~~
 2. ~~Profile page, account linking(technically operational, but no UI for it yet)~~
-3. ~~Guided setup
+3. Guided setup
 
 #### Information & sources
 
