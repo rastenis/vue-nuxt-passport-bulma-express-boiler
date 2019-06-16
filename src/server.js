@@ -117,7 +117,7 @@ app.post("/login", (req, res) => {
       return res.json({
         meta: {
           error: true,
-          msg: err
+          msg: err.msg
         }
       });
     }

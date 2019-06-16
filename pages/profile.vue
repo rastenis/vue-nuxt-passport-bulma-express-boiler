@@ -11,8 +11,11 @@
           <p>{{modals.main.msg}}</p>
           <hr>
           <div class="has-text-centered">
-            <button class="button" @click="askConfirmation(false)" >Cancel</button>
-            <button class="button is-danger" @click="modals.main.callback(); askConfirmation(false)" >Yes</button>
+            <button class="button" @click="askConfirmation(false)">Cancel</button>
+            <button
+              class="button is-danger"
+              @click="modals.main.callback(); askConfirmation(false)"
+            >Yes</button>
           </div>
         </div>
       </div>
@@ -82,8 +85,10 @@
         <label class="label">Google</label>
         <p v-if="$store.state.user?$store.state.user.data.google:false">
           You have already linked your Google account.
+          <!-- showing unlink button only if user can sign in via email/password OR has another social sign in -->
           <a
             class="is-danger"
+            v-if="meta.hasPassword || $store.state.user?$store.state.user.data.tokens.length>1:false"
             @click="unlink('google')"
           >Unlink.</a>
         </p>
@@ -98,8 +103,10 @@
         <label class="label">Twitter</label>
         <p v-if="$store.state.user?$store.state.user.data.twitter:false">
           You have already linked your Twitter account.
+          <!-- showing unlink button only if user can sign in via email/password OR has another social sign in -->
           <a
             class="is-danger"
+            v-if="meta.hasPassword || $store.state.user?$store.state.user.data.tokens.length>1:false"
             @click="unlink('twitter')"
           >Unlink.</a>
         </p>
@@ -112,7 +119,10 @@
       </div>
       <hr>
       <div style="text-align: center;">
-        <a style="color:DarkRed;" @click="askConfirmation(true, 'Are you sure? This is irreversible.', deleteAccount)"> Delete account </a>
+        <a
+          style="color:DarkRed;"
+          @click="askConfirmation(true, 'Are you sure? This is irreversible.', deleteAccount)"
+        >Delete account</a>
       </div>
     </div>
   </section>
@@ -159,8 +169,8 @@ export default {
     };
   },
   created() {
-      if (!this.$store.state.user) {
-      this.$router.push( "/");
+    if (!this.$store.state.user) {
+      this.$router.push("/");
       return;
     }
 
@@ -260,13 +270,9 @@ export default {
       }
     },
     async deleteAccount() {
-     try {
+      try {
         await this.$store.dispatch("deleteAccount", {});
-        this.msg(
-          "info",
-          true,
-          `You have successfully deleted your account!`
-        );
+        this.msg("info", true, `You have successfully deleted your account!`);
         this.$router.push("/");
       } catch (err) {
         this.msg("error", true, err.meta.msg);

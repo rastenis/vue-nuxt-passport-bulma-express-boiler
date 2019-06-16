@@ -44,9 +44,12 @@ passport.use(
             return done(err);
           }
           if (!user) {
-            return done(null, false, {
-              msg: `Email ${email} not found.`
-            });
+            return done(
+              {
+                msg: `Email ${email} not found.`
+              },
+              false
+            );
           }
 
           user = new User(user);
@@ -57,9 +60,12 @@ passport.use(
             if (isMatch) {
               return done(null, user);
             }
-            return done(null, false, {
-              msg: "Invalid email or password."
-            });
+            return done(
+              {
+                msg: "Invalid email or password."
+              },
+              false
+            );
           });
         }
       );
