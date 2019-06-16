@@ -40,12 +40,7 @@ class User {
   }
 
   verifyPassword(candidate) {
-    return new Promise((resolve, reject) => {
-      bcrypt.compare(candidate, this.data.password, (err, matches) => {
-        if (err) return reject(err);
-        resolve(null, matches);
-      });
-    });
+    return bcrypt.compare(candidate, this.data.password);
   }
 
   password(newPassword = false) {

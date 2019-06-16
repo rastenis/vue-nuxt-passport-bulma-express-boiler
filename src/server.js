@@ -271,20 +271,26 @@ app.patch("/changePassword", (req, res) => {
   user
     .verifyPassword(req.body.password)
     .then(r => {
+      if (!r) {
+        throw {
+          error: true,
+          msg: "The current password is wrong!"
+        };
+      }
+
       if (req.body.newPassword !== req.body.newPasswordRep) {
-        return res.json({
-          meta: {
-            error: true,
-            msg: "New passwords do not match!"
-          }
-        });
+        throw {
+          error: true,
+          msg: "New passwords do not match!"
+        };
       }
 
       user.data.password = req.body.newPassword;
-      user = user.password(req.body.newPassword);
-
+      return user.password(req.body.newPassword);
+    })
+    .then(r => {
       return res.json({
-        user: user,
+        user: r,
         meta: {
           error: false,
           msg: "You have successfully changed your password!"
@@ -293,10 +299,7 @@ app.patch("/changePassword", (req, res) => {
     })
     .catch(e => {
       return res.json({
-        meta: {
-          error: true,
-          msg: "The current password is wrong!"
-        }
+        meta: e
       });
     });
 });
