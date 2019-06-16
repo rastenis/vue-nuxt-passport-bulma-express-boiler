@@ -240,7 +240,7 @@ app.post("/register", (req, res, next) => {
 
 // user logout route
 app.post("/logout", (req, res) => {
-  if (typeof req.user === "undefined") {
+  if (!req.user) {
     return;
   }
 
@@ -252,7 +252,6 @@ app.post("/logout", (req, res) => {
         1
       );
     }
-    req.user = null;
     return res.json({
       meta: {
         error: false,
@@ -264,7 +263,7 @@ app.post("/logout", (req, res) => {
 
 // password change route
 app.patch("/changePassword", (req, res) => {
-  if (typeof req.user === "undefined") {
+  if (!req.user) {
     return;
   }
 
@@ -305,7 +304,7 @@ app.patch("/changePassword", (req, res) => {
 
 // route to clear linked accounts
 app.post("/unlink", (req, res) => {
-  if (typeof req.user === "undefined") {
+  if (!req.user) {
     return;
   }
 
@@ -330,7 +329,7 @@ app.post("/unlink", (req, res) => {
 
 // route to delete account
 app.post("/deleteAccount", (req, res) => {
-  if (typeof req.user === "undefined") {
+  if (!req.user) {
     return;
   }
 
@@ -344,7 +343,6 @@ app.post("/deleteAccount", (req, res) => {
           1
         );
       }
-      req.user = null;
       req.flash("info", "You have successfully deleted your account!");
 
       return res.json({
