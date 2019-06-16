@@ -9,7 +9,7 @@ const utilities = {
     ) {
       console.log(message);
     } else if (config.production_logging === "error" && type === 1) {
-      console.log(message);
+      console.error(message);
     }
   },
   // a base object for most api responses

@@ -87,8 +87,7 @@
           You have already linked your Google account.
           <!-- showing unlink button only if user can sign in via email/password OR has another social sign in -->
           <a
-            class="is-danger"
-            v-if="meta.hasPassword || $store.state.user?$store.state.user.data.tokens.length>1:false"
+            v-if="meta.hasPassword ||($store.state.user?$store.state.user.data.tokens.length>1:false)"
             @click="unlink('google')"
           >Unlink.</a>
         </p>
@@ -105,8 +104,7 @@
           You have already linked your Twitter account.
           <!-- showing unlink button only if user can sign in via email/password OR has another social sign in -->
           <a
-            class="is-danger"
-            v-if="meta.hasPassword || $store.state.user?$store.state.user.data.tokens.length>1:false"
+            v-if="meta.hasPassword ||($store.state.user?$store.state.user.data.tokens.length>1:false)"
             @click="unlink('twitter')"
           >Unlink.</a>
         </p>
@@ -176,10 +174,8 @@ export default {
 
     // checking if account contains password i.e isn't created form a token of some sort
     // checking for hashed pw
-    if (
-      this.$store.state.user.data.password !== null &&
-      typeof this.$store.state.user.data.password !== "undefined"
-    ) {
+
+    if (this.$store.state.user.data.password) {
       this.meta.hasPassword = true;
     }
   },

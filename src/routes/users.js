@@ -17,16 +17,16 @@ const users = [
 
 /* GET users listing. */
 router.get("/users", function handleUserFetch(req, res) {
-  // if (typeof req.user === 'undefined') {
-  //   return res.status(403).json({ success: false, message: 'Auth needed.' });
-  // }
+  if (!req.user) {
+    return res.status(403).json({ success: false, message: "Auth needed." });
+  }
   res.json(users);
   return;
 });
 
 /* GET user by ID. */
 router.get("/users/:id", function handleSingleUserFetch(req, res) {
-  if (typeof req.user === "undefined") {
+  if (!req.user) {
     return res.status(403).json({ success: false, message: "Auth needed." });
   }
 
