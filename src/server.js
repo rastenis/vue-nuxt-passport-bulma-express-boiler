@@ -1,6 +1,6 @@
 // deps
 process.env.DEBUG = process.env.NODE_ENV === "production" ? "" : "nuxt:*";
-const { Nuxt, Builder } = require("nuxt-edge");
+const { Nuxt, Builder } = require("nuxt");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const express = require("express");
@@ -69,7 +69,7 @@ if (config.self_hosted === "1") {
 
 // statics
 app.use("/i", express.static("assets/img"));
-
+app.set("trust proxy", 1);
 app.use(favicon(path.join(__dirname, "/../assets/favicon.ico")));
 app.use(helmet());
 app.use(
@@ -80,12 +80,18 @@ app.use(
 app.use(bodyParser.json());
 app.use(
   session({
+    name: "boilerSessionId", // non-default for security
     secret: config.session_secret,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: config.self_hosted === "1",
-      maxAge: config.infinite_sessions === "1" ? null : 24 * 60 * 60 * 1000 // 24 hours or infinite, depending on the config
+      secure: config.self_hosted == "1" || config.secureOverride ? true : false,
+      // 4 hours cookie expiration when secure, infinite when unsecure.
+      maxAge:
+        config.self_hosted == "1" || config.secureOverride
+          ? new Date(Date.now() + 60 * 60 * 1000 * 4)
+          : null,
+      domain: config.url.replace(/http:\/\/|https:\/\//g, "")
     },
     store: new NedbStore({
       filename: "db/persistence"
