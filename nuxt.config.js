@@ -27,6 +27,12 @@ module.exports = {
       }
     ]
   },
+  build: {
+    postcss: {
+      "postcss-cssnext": {},
+      "postcss-import": {}
+    }
+  },
   /*
    ** Global CSS
    */
