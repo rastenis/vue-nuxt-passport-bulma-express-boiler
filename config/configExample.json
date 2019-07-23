@@ -2,13 +2,12 @@
   "port": 3000,
   "url": "https://example.com",
   "session_secret": "super-secret-key",
-  "self_hosted": "0",
+  "self_hosted": false,
   "tls": {
     "email": "email@example.com",
     "domains": ["domain1.com", "domain2.com"]
   },
-  "infinite_sessions": "1",
+  "infinite_sessions": true,
   "production_logging": "none",
-  "bcrypt_salt_rounds": 12,
-  "NODE_ENV": "dev"
+  "bcrypt_salt_rounds": 12
 }

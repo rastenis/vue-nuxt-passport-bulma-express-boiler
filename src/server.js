@@ -40,7 +40,7 @@ const User = require("../src/controllers/user.js");
 Optional TLS cert generation (self_hosted must be 1 in the config)
  */
 let lex;
-if (config.self_hosted === "1") {
+if (config.self_hosted) {
   // returns an instance of node-greenlock with additional helper methods
   lex = require("greenlock-express").create({
     server: "production",
@@ -85,10 +85,11 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: config.self_hosted == "1" || config.secureOverride ? true : false,
+      secure: config.self_hosted || config.secureOverride ? true : false,
       // 4 hours cookie expiration when secure, infinite when unsecure.
       maxAge:
-        config.self_hosted == "1" || config.secureOverride
+        (config.self_hosted || config.secureOverride) &&
+        !config.infinite_sessions // forcing infinite if infinite_sessions is set to true
           ? new Date(Date.now() + 60 * 60 * 1000 * 4)
           : null,
       domain: config.url.replace(/http:\/\/|https:\/\//g, "")
@@ -397,7 +398,7 @@ Nuxt.js configuration
 
 const nuxtConfig = require("../nuxt.config.js");
 
-nuxtConfig.dev = config.NODE_ENV !== "production";
+nuxtConfig.dev = process.env.NODE_ENV !== "production";
 const nuxt = new Nuxt(nuxtConfig);
 
 if (nuxtConfig.dev) {
@@ -410,7 +411,7 @@ app.use(nuxt.render);
 /*
 Port listening; HTTPS redirect setup if self_hosted is set in the config
 */
-if (config.self_hosted === "1") {
+if (config.self_hosted) {
   // handles acme-challenge and redirects to https
   require("http")
     .createServer(lex.middleware(require("redirect-https")()))
