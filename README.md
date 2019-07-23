@@ -54,7 +54,7 @@ If you set secure_override to true in the `config.json`, Express will be set up 
 
 1. ~~Animations & completed alerts for various auth actions~~
 2. ~~Profile page, account linking(technically operational, but no UI for it yet)~~
-3. ~~Guided setup--
+3. ~~Guided setup~~
 
 #### Information & sources
 

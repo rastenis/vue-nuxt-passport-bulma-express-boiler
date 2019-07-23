@@ -1,8 +1,7 @@
 import { resolve } from "path";
-import { Nuxt, Builder } from "nuxt-edge";
+import { Nuxt, Builder } from "nuxt";
 import { JSDOM } from "jsdom";
-import test from "ava";
-var rpn = require("request-promise-native");
+//var rpn 
 
 // We keep the nuxt and server instance
 // So we can close them at the end of the test
