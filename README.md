@@ -46,6 +46,10 @@ This template contains Google and Twitter logins, but more can be added easily, 
 - The process for obtaining a Google key is described [here](https://developers.google.com/identity/protocols/OAuth2).
 - The process for obtaining a Twitter key is described [here](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html).
 
+### Running locally
+
+If you set secure_override to true in the `config.json`, Express will be set up with `trust proxy`, which will allow for secure cookies to work over reverse proxies (Apache, Nginx, etc.)
+
 ### TODO list
 
 1. ~~Animations & completed alerts for various auth actions~~

@@ -66,10 +66,12 @@ if (config.self_hosted) {
     }
   });
 }
+if (config.secure_override) {
+  app.set("trust proxy", 1);
+}
 
 // statics
 app.use("/i", express.static("assets/img"));
-app.set("trust proxy", 1);
 app.use(favicon(path.join(__dirname, "/../assets/favicon.ico")));
 app.use(helmet());
 app.use(

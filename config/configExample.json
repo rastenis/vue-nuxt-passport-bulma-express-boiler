@@ -9,5 +9,6 @@
   },
   "infinite_sessions": true,
   "production_logging": "none",
-  "bcrypt_salt_rounds": 12
+  "bcrypt_salt_rounds": 12,
+  "secure_override": false
 }
