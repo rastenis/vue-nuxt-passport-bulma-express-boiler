@@ -1,9 +1,15 @@
-const chalk = require("chalk");
 const prompt = require("prompt-sync")({ sigint: true });
-const configPath = "../config/config.json";
 const fs = require("fs-extra");
 
 let config = require("./config/configExample.json");
+let passportKeys = require("./config/passportKeysExample.json");
+
+if (process.argv[2]=="--headless") {
+  // saving defaults
+  fs.copySync('./config/configExample.json', './config/config.json')
+  fs.copySync('./config/passportKeysExample.json', './config/passportKeys.json')
+  process.exit(0);
+}
 
 console.log("Hello!");
 console.log("Starting setup...");
@@ -64,7 +70,6 @@ if (
     config.url
   );
 
-  let passportKeys = require("./config/passportKeysExample.json");
   console.log("Showing additional API KEY information:");
   console.log(
     "Go to https://console.developers.google.com and create a new project. Then, create credentials for 'OAuth client ID'."
@@ -77,7 +82,6 @@ if (
   );
   passportKeys.TWITTER_KEY = prompt("Paste the API key here:");
   passportKeys.TWITTER_SECRET = prompt("Paste the API secret key here:");
-  fs.writeJsonSync("./config/passportKeys.json", passportKeys);
   console.log("Passport keys configured.");
 }
 
@@ -89,4 +93,6 @@ config.session_secret = [...Array(30)]
 
 // writing and exitting
 fs.writeJsonSync("./config/config.json", config);
+fs.writeJsonSync("./config/passportKeys.json", passportKeys);
+
 process.exit(0);
