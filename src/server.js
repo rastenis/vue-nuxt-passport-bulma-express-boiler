@@ -87,10 +87,10 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: config.self_hosted || config.secureOverride ? true : false,
+      secure: config.self_hosted || config.secure_override,
       // 4 hours cookie expiration when secure, infinite when unsecure.
       maxAge:
-        (config.self_hosted || config.secureOverride) &&
+        (config.self_hosted || config.secure_override) &&
         !config.infinite_sessions // forcing infinite if infinite_sessions is set to true
           ? new Date(Date.now() + 60 * 60 * 1000 * 4)
           : null,

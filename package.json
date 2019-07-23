@@ -11,7 +11,9 @@
     "prod": "nuxt build && nuxt start",
     "precommit": "npm run lint",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "test": "ava --serial --verbose"
+    "test": "ava --serial --verbose",
+    "setup": "node setup.js",
+    "setup:headless": "node setup.js --headless"
   },
   "dependencies": {
     "async": "^3.0.1",
@@ -62,6 +64,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^5.2.3",
     "node-sass": "^4.9.2",
+    "prompt-sync": "^4.1.7",
     "sass-loader": "^7.1.0"
   },
   "prettier": {}

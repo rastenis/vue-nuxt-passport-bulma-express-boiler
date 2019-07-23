@@ -5,7 +5,8 @@
   "self_hosted": false,
   "tls": {
     "email": "email@example.com",
-    "domains": ["domain1.com", "domain2.com"]
+    "domains": ["domain1.com", "domain2.com"],
+    "tos":false
   },
   "infinite_sessions": true,
   "production_logging": "none",
