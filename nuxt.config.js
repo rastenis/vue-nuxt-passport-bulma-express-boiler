@@ -31,12 +31,6 @@ module.exports = {
    ** Global CSS
    */
   css: ["~/assets/css/main.css", "~/assets/css/bulma.min.css"],
-  /*
-   ** Add axios globally
-   */
-  build: {
-    vendor: ["axios"]
-  },
   serverMiddleware: [
     // API middleware
     "~/src/server.js"

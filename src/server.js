@@ -253,19 +253,12 @@ app.post("/logout", (req, res) => {
   }
 
   req.logout();
-  req.session.destroy(err => {
-    if (err) {
-      utils.log(
-        "Error : Failed to destroy the session during logout." + err,
-        1
-      );
+ 
+  return res.json({
+    meta: {
+      error: false,
+      msg: "You have successfully logged out!"
     }
-    return res.json({
-      meta: {
-        error: false,
-        msg: "You have successfully logged out!"
-      }
-    });
   });
 });
 
