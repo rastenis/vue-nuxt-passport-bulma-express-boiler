@@ -51,7 +51,7 @@ if (config.self_hosted) {
 }
 
 if (!config.self_hosted) {
-  config.port = ~~prompt("Enter port (3000): ", config.port);
+  config.port = ~~prompt("Enter port (7777): ", config.port);
   config.secure_override = ~~prompt(
     "Will you use an external HTTPS/TLS provider proxy? Secure cookies will be enabled, if yes (y/N): ",
     false

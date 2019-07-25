@@ -1,5 +1,5 @@
 {
-  "port": 3000,
+  "port": 7777,
   "url": "https://example.com",
   "session_secret": "super-secret-key",
   "self_hosted": false,

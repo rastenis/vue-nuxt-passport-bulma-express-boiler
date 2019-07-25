@@ -11,5 +11,5 @@ install:
   - npm install
   - npm run setup:headless
 script:
-  - npm run test
   - npm run build
+  - npm run test
