@@ -8,6 +8,7 @@ import config from "../config/config.json";
 // So we can close them at the end of the test
 let nuxt = null,
   cookie,
+  email,
   ax = axios.create({ withCredentials: true });
 
 // Init Nuxt.js and create a server listening on localhost:4000
@@ -75,12 +76,13 @@ test("Auth-gated fetch attempt", async t => {
 
 test("Registration", async t => {
   try {
+    email = `tester${Math.random()
+      .toString(36)
+      .substr(2, 7)}@test.com`;
     const { data, headers } = await ax.post(
       `http://localhost:${config.port}/register`,
       {
-        email: `tester${Math.random()
-          .toString(36)
-          .substr(2, 7)}@test.com`,
+        email: email,
         password: "password"
       },
       { withCredentials: true }
@@ -95,7 +97,7 @@ test("Registration", async t => {
   }
 });
 
-test("Auth-gated fetch attempt with auth", async t => {
+test("Fetch users", async t => {
   try {
     const { data } = await ax({
       method: "get",
@@ -111,6 +113,83 @@ test("Auth-gated fetch attempt with auth", async t => {
       { name: "Pooya" },
       { name: "Sébastien" }
     ]);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+test("Fetch user", async t => {
+  try {
+    const { data } = await ax({
+      method: "get",
+      url: `http://localhost:${config.port}/api/users/0`,
+      withCredentials: true,
+      headers: {
+        Cookie: cookie
+      }
+    });
+
+    t.deepEqual(data, { name: "Alexandre" });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+test("Logout", async t => {
+  try {
+    const { data } = await ax({
+      method: "post",
+      url: `http://localhost:${config.port}/logout`,
+      withCredentials: true,
+      headers: {
+        Cookie: cookie
+      }
+    });
+
+    t.deepEqual(data.meta, {
+      error: false,
+      msg: "You have successfully logged out!"
+    });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+test("Login again", async t => {
+  try {
+    const { data } = await ax({
+      method: "post",
+      url: `http://localhost:${config.port}/login`,
+      withCredentials: true,
+      headers: {
+        Cookie: cookie
+      },
+      data: { email: email, password: "password" }
+    });
+
+    t.deepEqual(data.meta, {
+      error: false
+    });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+test("Delete account", async t => {
+  console.log(email);
+  try {
+    const { data } = await ax({
+      method: "post",
+      url: `http://localhost:${config.port}/deleteAccount`,
+      withCredentials: true,
+      headers: {
+        Cookie: cookie
+      }
+    });
+
+    t.deepEqual(data.meta, {
+      error: false
+    });
   } catch (e) {
     console.log(e);
   }
