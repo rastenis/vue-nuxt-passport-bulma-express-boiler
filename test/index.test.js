@@ -1,7 +1,8 @@
 import { resolve } from 'path'
 import { Nuxt, Builder } from 'nuxt'
-import { JSDOM } from 'jsdom'
 import test from 'ava'
+import axios from 'axios'
+import config from '../config/config.json'
 
 // We keep the nuxt and server instance
 // So we can close them at the end of the test
@@ -9,11 +10,17 @@ let nuxt = null
 
 // Init Nuxt.js and create a server listening on localhost:4000
 test.before(async () => {
-  const config = {
+
+  const nuxtConfig = {
     dev: false,
-    rootDir: resolve(__dirname, '..')
+    rootDir: resolve(__dirname, '..'),
+    css: ["~/assets/css/main.css", "~/assets/css/bulma.min.css"],
+    serverMiddleware: [
+      // API middleware
+      "~/src/server.js"
+    ]
   }
-  nuxt = new Nuxt(config)
+  nuxt = new Nuxt(nuxtConfig)
   await new Builder(nuxt).build()
   await nuxt.server.listen(4000, 'localhost')
 }, 30000)
@@ -48,20 +55,21 @@ test("Non-existent user fetch", async t => {
 });
 
 // Testing non-user API fetch
-test("Non-existent user API fetch", async t => {
-  const { error } = await nuxt.renderRoute("/api/users/hello", {});
+test("Non-existent page fetch", async t => {
+  const { error } = await nuxt.renderRoute("/some/false/route", {});
   t.true(
     error.statusCode === 404 && error.message === "This page could not be found"
   );
 });
 
-// Testing user route
-test("Non-existent page fetch", async t => {
-  const { html } = await nuxt.renderRoute(
-    "/something/some-kind-of-request",
-    {}
-  );
-  t.true(html.includes("This page could not be found"));
+test("Auth-gated fetch attempt", async t => {
+  try{
+    const { data } = await axios.get(`http://localhost:${config.port}/api/users`);
+  }catch(e){
+    t.is(e.response.status,403);
+    t.is(e.response.statusText,"Forbidden");
+    t.is(e.response.data,{ success: false, message: 'Auth needed.' } );
+  }
 });
 
 // Close server and ask nuxt to stop listening to file changes
