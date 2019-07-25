@@ -237,6 +237,7 @@ app.post("/register", (req, res, next) => {
       );
     })
     .catch(err => {
+      utils.log(err, 1);
       return res.json({
         meta: {
           error: true,
@@ -253,7 +254,7 @@ app.post("/logout", (req, res) => {
   }
 
   req.logout();
- 
+
   return res.json({
     meta: {
       error: false,
@@ -300,8 +301,12 @@ app.patch("/changePassword", (req, res) => {
       });
     })
     .catch(e => {
+      utils.log(e, 1);
       return res.json({
-        meta: e
+        meta: {
+          error: true,
+          msg: "Internal error. Please try again later!"
+        }
       });
     });
 });

@@ -4,6 +4,8 @@ const fs = require("fs-extra");
 let config = require("./config/configExample.json");
 let passportKeys = require("./config/passportKeysExample.json");
 
+fs.ensureDirSync("./db/");
+
 if (process.argv[2]=="--headless") {
   // saving defaults
   fs.copySync('./config/configExample.json', './config/config.json')
