@@ -11,7 +11,7 @@
     "prod": "nuxt build && nuxt start",
     "precommit": "npm run lint",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "test": "jest",
+    "test": "ava --serial --verbose",
     "setup": "node setup.js",
     "setup:headless": "node setup.js --headless"
   },
@@ -26,7 +26,6 @@
     "flash": "^1.1.0",
     "greenlock-express": "^2.7.11",
     "helmet": "^3.19.0",
-    "jsdom": "^15.1.1",
     "le-challenge-fs": "^2.0.9",
     "le-store-certbot": "^2.2.3",
     "nedb": "^1.8.0",
@@ -36,17 +35,22 @@
     "passport-google-oauth": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
-    "request": "^2.88.0",
     "serve-favicon": "^2.5.0",
     "shortid": "^2.2.14"
   },
   "devDependencies": {
+    "ava": "^2.2.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-vue": "^5.2.3",
     "fs-extra": "^8.1.0",
-    "jest": "^24.8.0",
+    "jsdom": "^15.1.1",
     "prompt-sync": "^4.1.7"
   },
-  "prettier": {}
+  "prettier": {},
+  "ava": {
+    "files": [
+      "test/**/*"
+    ]
+  }
 }
