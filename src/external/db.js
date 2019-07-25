@@ -1,16 +1,21 @@
 const Datastore = require("nedb");
+const fs = require("fs-extra");
 
 /*
 A single database for user data
 */
-const db = {
-  users: new Datastore({
-    filename: "db/users",
-    autoload: true
-  })
-};
+let db;
 
-// making usernames unique
+// ensuring folder
+fs.ensureDir("db/").then(()=>{
+  db = {
+    users: new Datastore({
+      filename: "db/users",
+      autoload: true
+    })
+  };
+
+  // making usernames unique
 db.users.ensureIndex(
   {
     fieldName: "email",
@@ -23,5 +28,8 @@ db.users.ensureIndex(
     }
   }
 );
+});
+
+
 
 module.exports = db;
