@@ -29,7 +29,7 @@ const config = require("../config/config.json");
 /*
 Passport configuration.
  */
-const passportConfig = require("../config/passportConfig.js");
+const passportConfig = require("./passport/passportConfig.js");
 
 /*
 The user model
@@ -400,13 +400,13 @@ const nuxtConfig = require("../nuxt.config.js");
 
 nuxtConfig.dev = process.env.NODE_ENV !== "production";
 const nuxt = new Nuxt(nuxtConfig);
-
 // serving nuxt in devmode
 if (nuxtConfig.dev) {
   const builder = new Builder(nuxt);
   builder.build();
-  app.use(nuxt.render);
 }
+// serving nuxt
+app.use(nuxt.render);
 
 /*
 Port listening; HTTPS redirect setup if self_hosted is set in the config
