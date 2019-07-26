@@ -176,7 +176,6 @@ test("Login again", async t => {
 });
 
 test("Delete account", async t => {
-  console.log(email);
   try {
     const { data } = await ax({
       method: "post",

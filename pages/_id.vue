@@ -10,6 +10,7 @@
 <script>
 import axios from "axios";
 
+
 export default {
   name: "id",
   asyncData({ params, error }) {

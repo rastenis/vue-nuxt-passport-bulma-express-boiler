@@ -1,4 +1,4 @@
-// deps
+"use strict";
 process.env.DEBUG = process.env.NODE_ENV === "production" ? "" : "nuxt:*";
 const { Nuxt, Builder } = require("nuxt");
 const bodyParser = require("body-parser");
@@ -29,7 +29,7 @@ const config = require("../config/config.json");
 /*
 Passport configuration.
  */
-const passportConfig = require("../config/passportConfig.js");
+const passportConfig = require("./passport/passportConfig.js");
 
 /*
 The user model
@@ -400,12 +400,12 @@ const nuxtConfig = require("../nuxt.config.js");
 
 nuxtConfig.dev = process.env.NODE_ENV !== "production";
 const nuxt = new Nuxt(nuxtConfig);
-
+// serving nuxt in devmode
 if (nuxtConfig.dev) {
   const builder = new Builder(nuxt);
   builder.build();
 }
-// No build in production
+// serving nuxt
 app.use(nuxt.render);
 
 /*
