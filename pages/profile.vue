@@ -128,7 +128,8 @@
 </template>
 
 <script>
-import axios from "~/plugins/axios.js";
+import axios from "axios";
+
 
 export default {
   head() {

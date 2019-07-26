@@ -1,4 +1,4 @@
-// deps
+"use strict";
 process.env.DEBUG = process.env.NODE_ENV === "production" ? "" : "nuxt:*";
 const { Nuxt, Builder } = require("nuxt");
 const bodyParser = require("body-parser");

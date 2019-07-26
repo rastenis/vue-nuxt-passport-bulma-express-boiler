@@ -1,13 +1,12 @@
-require("dotenv").config();
 const passport = require("passport");
 const { Strategy: LocalStrategy } = require("passport-local");
 const { Strategy: TwitterStrategy } = require("passport-twitter");
 const { OAuth2Strategy: GoogleStrategy } = require("passport-google-oauth");
 
-const db = require("../src/external/db.js");
-const keysConf = require("../config/passportKeys.json");
-const User = require("../src/controllers/user.js");
-const config = require("./config.json");
+const db = require("../external/db.js");
+const keysConf = require("../../config/passportKeys.json");
+const User = require("../controllers/user.js");
+const config = require("../../config/config.json");
 
 passport.serializeUser((user, done) => done(null, user.data._id));
 
