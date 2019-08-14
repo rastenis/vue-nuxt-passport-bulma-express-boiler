@@ -6,10 +6,13 @@ let passportKeys = require("./config/passportKeysExample.json");
 
 fs.ensureDirSync("./db/");
 
-if (process.argv[2]=="--headless") {
+if (process.argv[2] == "--headless") {
   // saving defaults
-  fs.copySync('./config/configExample.json', './config/config.json')
-  fs.copySync('./config/passportKeysExample.json', './config/passportKeys.json')
+  fs.copySync("./config/configExample.json", "./config/config.json");
+  fs.copySync(
+    "./config/passportKeysExample.json",
+    "./config/passportKeys.json"
+  );
   process.exit(0);
 }
 
@@ -19,7 +22,7 @@ console.log("Starting setup...");
 config.self_hosted =
   prompt(
     "Use Auto-generated TLS? (will require ports 80 and 443) (y/N): ",
- false
+    "n"
   ).toLowerCase() == "y";
 
 if (config.self_hosted) {
@@ -28,7 +31,7 @@ if (config.self_hosted) {
   config.tls.tos =
     prompt(
       "Do you agree with the LetsEncrypt TOS? (Y/n): ",
-      true
+      "y"
     ).toLowerCase() == "y";
 
   if (!config.tls.tos) {
@@ -52,10 +55,11 @@ if (config.self_hosted) {
 
 if (!config.self_hosted) {
   config.port = ~~prompt("Enter port (7777): ", config.port);
-  config.secure_override = ~~prompt(
-    "Will you use an external HTTPS/TLS provider proxy? Secure cookies will be enabled, if yes (y/N): ",
-    false
-  );
+  config.secure_override =
+    ~~prompt(
+      "Will you use an external HTTPS/TLS provider proxy? Secure cookies will be enabled, if yes (y/N): ",
+      "n"
+    ).toLowerCase() == "y";
 }
 
 if (

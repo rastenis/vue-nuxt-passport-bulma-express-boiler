@@ -3,7 +3,6 @@
   "version": "1.0.1",
   "description": "A vue/nuxtjs/passport/bulma boilerplate for express.",
   "author": "Scharkee",
-  "private": true,
   "scripts": {
     "dev": "node src/server.js",
     "build": "nuxt build",
@@ -13,6 +12,7 @@
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "test": "ava --serial --verbose",
     "setup": "node setup.js",
+    "config": "npm run setup",
     "setup:headless": "node setup.js --headless"
   },
   "dependencies": {

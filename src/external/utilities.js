@@ -30,6 +30,11 @@ const utilities = {
         msg: message || "An error has occured."
       }
     };
+  },
+  cleanUser: function cleanUser(user) {
+    delete user.data.password;
+    delete user._data.password;
+    return user;
   }
 };
 

@@ -28,8 +28,8 @@ Demo website coming soon™.
 # install dependencies
 $ npm install
 
-# run config
-$ npm run config
+# run setup
+$ npm run setup
 
 # serve with hot reload at localhost:3000
 $ npm run dev

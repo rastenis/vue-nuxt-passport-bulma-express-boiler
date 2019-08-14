@@ -151,7 +151,7 @@ app.post("/login", (req, res) => {
         meta: {
           error: false
         },
-        user: user
+        user:  utils.cleanUser(Object.assign({}, user))
       });
     });
   })(req, res);
@@ -231,7 +231,7 @@ app.post("/register", (req, res, next) => {
               error: false,
               msg: "You have successfully registered!"
             },
-            user: newDoc
+            user: utils.cleanUser(Object.assign({}, newDoc))
           });
         }
       );
@@ -293,7 +293,7 @@ app.patch("/changePassword", (req, res) => {
     })
     .then(r => {
       return res.json({
-        user: r,
+        user: utils.cleanUser(Object.assign({}, r)),
         meta: {
           error: false,
           msg: "You have successfully changed your password!"
@@ -327,7 +327,7 @@ app.post("/unlink", (req, res) => {
 
   user.saveUser().then(r => {
     return res.json({
-      user: user,
+      user: utils.cleanUser(Object.assign({}, user)),
       meta: {
         error: false,
         msg: `You have successfully unlinked your ${req.body.toUnlink} account!`
