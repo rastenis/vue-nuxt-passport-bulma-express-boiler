@@ -2,9 +2,8 @@
 
 [![Status](https://travis-ci.org/scharkee/vue-nuxt-passport-bulma-express-boiler.svg?branch=master)](https://travis-ci.org/scharkee/vue-nuxt-passport-bulma-express-boiler)
 
-A Vue+Vuex starter with Nuxt scaffolding, Bulma styling, and Express backend.
+A Vue+Vuex starter with Nuxt scaffolding, Bulma styling, and Express backend. [A demo website is available here.](https://vuenuxt.demos.matasr.com)
 
-Demo website coming soon™.
 
 ## Features
 
