@@ -10,7 +10,7 @@
     "launch": "nuxt build && npm run start",
     "precommit": "npm run lint",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "test": "ava --serial --verbose",
+    "test": "jest",
     "setup": "node setup.js",
     "config": "npm run setup",
     "setup:headless": "node setup.js --headless"
@@ -27,6 +27,7 @@
     "flash": "^1.1.0",
     "greenlock-express": "^4.0.3",
     "helmet": "^3.21.2",
+    "jest": "^25.1.0",
     "le-challenge-fs": "^2.0.9",
     "le-store-certbot": "^2.2.3",
     "nedb": "^1.8.0",
@@ -40,7 +41,6 @@
     "shortid": "^2.2.15"
   },
   "devDependencies": {
-    "ava": "^3.2.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-vue": "^6.1.2",

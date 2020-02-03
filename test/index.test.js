@@ -1,8 +1,7 @@
-import { resolve } from "path";
-import { Nuxt, Builder } from "nuxt";
-import test from "ava";
-import axios from "axios";
-import config from "../config/config.json";
+const { resolve } = require("path");
+const { Nuxt, Builder } = require("nuxt");
+const axios = require("axios");
+const config = require("../config/config.json");
 
 // We keep the nuxt and server instance
 // So we can close them at the end of the test
@@ -11,8 +10,7 @@ let nuxt = null,
   email,
   ax = axios.create({ withCredentials: true });
 
-// Init Nuxt.js and create a server listening on localhost:4000
-test.before(async () => {
+beforeAll(async () => {
   const nuxtConfig = {
     dev: false,
     rootDir: resolve(__dirname, ".."),
@@ -25,56 +23,59 @@ test.before(async () => {
   nuxt = new Nuxt(nuxtConfig);
   await new Builder(nuxt).build();
   await nuxt.server.listen(4000, "localhost");
-}, 30000);
+});
 
 // Example of testing only generated html
-test("Index route HTML contents", async t => {
+test("Index route HTML contents", async () => {
   const context = {};
   const { html } = await nuxt.server.renderRoute("/", context);
-  t.true(html.includes("Log in to see users"));
-  t.true(html.includes("WELCOME"));
+  expect(html.includes("Log in to see users")).toBe(true);
+  expect(html.includes("WELCOME")).toBe(true);
 
   // nuxt bundles images, so the way to test this is just via alts and class
-  t.true(html.includes('alt="Nuxt.js Logo" class="logo"'));
+  expect(html.includes('alt="Nuxt.js Logo" class="logo"')).toBe(true);
 });
 
 // Testing register route
-test("Register route & its contents", async t => {
+test("Register route & its contents", async () => {
   const { html } = await nuxt.renderRoute("/register", {});
-  t.true(html.includes('<form action="/register" method="POST"'));
+  expect(html.includes('<form action="/register" method="POST"')).toBe(true);
 });
 
 // Testing contents of publicly accessible routes
-test("Login route & its contents", async t => {
+test("Login route & its contents", async () => {
   const { html } = await nuxt.renderRoute("/login", {});
-  t.true(html.includes('<form action="/login" method="POST"'));
+  expect(html.includes('<form action="/login" method="POST"')).toBe(true);
 });
 
 // Testing user route
-test("Non-existent user fetch", async t => {
+test("Non-existent user fetch", async () => {
   const { html } = await nuxt.renderRoute("/some-kind-of-user", {});
-  t.true(html.includes("User not found"));
+  expect(html.includes("User not found")).toBe(true);
 });
 
 // Testing non-user API fetch
-test("Non-existent page fetch", async t => {
+test("Non-existent page fetch", async () => {
   const { error } = await nuxt.renderRoute("/some/false/route", {});
-  t.true(
+  expect(
     error.statusCode === 404 && error.message === "This page could not be found"
-  );
+  ).toBe(true);
 });
 
-test("Auth-gated fetch attempt", async t => {
+test("Auth-gated fetch attempt", async () => {
   try {
     const { data } = await ax.get(`http://localhost:${config.port}/api/users`);
   } catch (e) {
-    t.is(e.response.status, 403);
-    t.is(e.response.statusText, "Forbidden");
-    t.deepEqual(e.response.data, { success: false, message: "Auth needed." });
+    expect(e.response.status).toBe(403);
+    expect(e.response.statusText).toBe(403);
+    expect(e.response.data).toEqual({
+      success: false,
+      message: "Auth needed."
+    });
   }
 });
 
-test("Registration", async t => {
+test("Registration", async () => {
   try {
     email = `tester${Math.random()
       .toString(36)
@@ -87,7 +88,7 @@ test("Registration", async t => {
       },
       { withCredentials: true }
     );
-    t.deepEqual(data.meta, {
+    expect(data.meta).toEqual({
       error: false,
       msg: "You have successfully registered!"
     });
@@ -97,7 +98,7 @@ test("Registration", async t => {
   }
 });
 
-test("Fetch users", async t => {
+test("Fetch users", async () => {
   try {
     const { data } = await ax({
       method: "get",
@@ -108,7 +109,7 @@ test("Fetch users", async t => {
       }
     });
 
-    t.deepEqual(data, [
+    expect(data).toEqual([
       { name: "Alexandre" },
       { name: "Pooya" },
       { name: "Sébastien" }
@@ -118,7 +119,7 @@ test("Fetch users", async t => {
   }
 });
 
-test("Fetch user", async t => {
+test("Fetch user", async () => {
   try {
     const { data } = await ax({
       method: "get",
@@ -129,13 +130,13 @@ test("Fetch user", async t => {
       }
     });
 
-    t.deepEqual(data, { name: "Alexandre" });
+    expect(data).toEqual({ name: "Alexandre" });
   } catch (e) {
     console.log(e);
   }
 });
 
-test("Logout", async t => {
+test("Logout", async () => {
   try {
     const { data } = await ax({
       method: "post",
@@ -146,7 +147,7 @@ test("Logout", async t => {
       }
     });
 
-    t.deepEqual(data.meta, {
+    expect(data.meta).toEqual({
       error: false,
       msg: "You have successfully logged out!"
     });
@@ -155,7 +156,7 @@ test("Logout", async t => {
   }
 });
 
-test("Login again", async t => {
+test("Login again", async () => {
   try {
     const { data } = await ax({
       method: "post",
@@ -167,7 +168,7 @@ test("Login again", async t => {
       data: { email: email, password: "password" }
     });
 
-    t.deepEqual(data.meta, {
+    expect(data.meta).toEqual({
       error: false
     });
   } catch (e) {
@@ -175,7 +176,7 @@ test("Login again", async t => {
   }
 });
 
-test("Delete account", async t => {
+test("Delete account", async () => {
   try {
     const { data } = await ax({
       method: "post",
@@ -186,7 +187,7 @@ test("Delete account", async t => {
       }
     });
 
-    t.deepEqual(data.meta, {
+    expect(data.meta).toEqual({
       error: false
     });
   } catch (e) {
@@ -195,6 +196,6 @@ test("Delete account", async t => {
 });
 
 // Close server and ask nuxt to stop listening to file changes
-test.after("Closing server and nuxt.js", t => {
+afterAll(() => {
   nuxt.close();
 });
