@@ -80,7 +80,6 @@ export default {
         this.msg("info", true, "You have successfully logged in!");
         this.$nuxt._router.push("/");
       } catch (err) {
-        console.log(err);
         this.msg("error", true, err.meta.msg);
       }
     },
