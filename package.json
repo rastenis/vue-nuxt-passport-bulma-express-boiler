@@ -30,7 +30,7 @@
     "le-store-certbot": "^2.2.3",
     "nedb": "^1.8.0",
     "nedb-session-store": "^1.1.2",
-    "nuxt": "^2.8.1",
+    "nuxt": "^2.15.8",
     "passport": "^0.4.0",
     "passport-google-oauth": "^2.0.0",
     "passport-local": "^1.0.0",
